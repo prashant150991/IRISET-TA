@@ -1,2 +1,2 @@
-# IRISETTA
-Travel Allowance format printer.
+# IRISET-TA
+IRISET travel allowance format printer.
