@@ -1,0 +1,118 @@
+@page {
+    size: 21cm 29.7cm;
+    /* margin: 30mm 45mm 30mm 45mm; */
+     /* change the margins as you want them to be. */
+}
+
+.headd{
+
+
+    /* position: absolute; */
+    left: 12%;
+    height: 25%;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.column1 {
+
+  float: left;
+  width: 10%;
+  /* padding-left: 20px; */
+
+}
+
+.column2 {
+
+  float: left;
+  /* padding-left: 60px; */
+  margin-left: 60px;
+  width: 70%;
+
+}
+
+.yo {
+
+  text-align: center;
+
+}
+
+.hi {
+
+  font-size: 8;
+
+}
+
+.hii {
+
+  font-size: 12;
+
+}
+
+.format {
+
+  text-align: center;
+  margin-top: -25%;
+  margin-left: 20px;
+
+}
+
+.main {
+
+  padding-left: 0%;
+  padding-right: 10%;
+  margin-top: 5%;
+
+}
+
+.t1 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+.t2 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  border-top: none;
+  width: 100%;
+
+}
+
+.t3 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  border-top: none;
+}
+
+table {
+
+  width: 100%;
+
+}
+
+td {
+
+  /* padding-right: 30%; */
+  /* padding-left: 30%; */
+  text-align: left;
+  padding-left: inherit;
+
+}
+
+tr {
+
+  padding-left: 10%;
+
+}
+
+.ccc {
+
+  word-wrap: none;
+  font-size: 12;
+
+}

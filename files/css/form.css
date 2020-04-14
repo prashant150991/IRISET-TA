@@ -1,0 +1,203 @@
+
+input::placeholder {
+    /*color: red;*/
+    font-weight: 100;
+    /*font-size: small;*/
+}
+
+.heading {
+
+    padding: 2%;
+
+}
+
+.buffer {
+
+    padding: 10px;
+
+}
+
+.formData {
+
+    font-weight: bold;
+    text-align: center;
+    font-size: medium;
+
+
+}
+
+.formLabel {
+
+    font-weight: bold;
+    text-align: center;
+
+}
+
+.fff {
+
+    margin: 5px;
+
+
+}
+
+#travelAllowance {
+
+    padding-top: 4%;
+    padding-left: 6%;
+
+}
+
+.startDate {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.endDate {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.fromStation {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.toStation {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.train {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.distance {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.objective {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.depTime {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+.arrTime {
+
+    width: 100%;
+    height: 50px;
+    text-align: center;
+
+}
+
+hr.style4 {
+    border-top: 1px solid #3b388c;
+}
+
+#yo {
+
+    /*margin-left: 20px;*/
+
+}
+
+#first {
+
+    width: 100%;
+
+}
+
+#second {
+
+    width: 100%;
+
+}
+
+#third {
+
+    width: 100%;
+
+}
+
+#fourth {
+
+    /*width: 100%;*/
+
+}
+
+#firstf {
+
+    width: 100%;
+
+}
+
+#secondf {
+
+    width: 100%;
+
+}
+
+#thirdf {
+
+    width: 100%;
+
+}
+#fourthf {
+
+    width: 100%;
+
+}
+.centerBlock {
+    display: table;
+    margin: auto;
+}
+
+.sss {
+
+    padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-weight: bold;
+    /*text-align: center;*/
+
+}
+
+.hhh {
+
+    margin-left: -10px;
+
+}
+
+.mand {
+
+    color: red;
+
+}

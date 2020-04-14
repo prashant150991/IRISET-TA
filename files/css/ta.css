@@ -1,0 +1,188 @@
+@page {
+    size: 21cm 29.7cm;
+    /* margin: 30mm 45mm 30mm 45mm; */
+     /* change the margins as you want them to be. */
+}
+
+.headd{
+
+
+    /* position: absolute; */
+    left: 12%;
+    height: 25%;
+    padding-left: 100px;
+    padding-right: 100px;
+
+}
+
+.column1 {
+
+  float: left;
+  width: 10%;
+  /* padding-left: 20px; */
+
+}
+
+.column2 {
+
+  float: left;
+  /* padding-left: 60px; */
+  margin-left: 60px;
+  width: 70%;
+
+}
+
+.yo {
+
+  text-align: center;
+
+}
+
+.hi {
+
+  font-size: 10;
+
+}
+
+.hii {
+
+  font-size: 15;
+
+}
+
+.format {
+
+  /* text-align: center; */
+  /* margin-top: -5%; */
+  margin-left: 40%;
+
+}
+
+.main {
+
+  padding-left: 10%;
+  padding-right: 10%;
+  margin-top: 5%;
+    width: 100%;
+
+}
+
+table {
+
+  width: 100%;
+
+}
+
+td {
+
+  /* padding-right: 30%; */
+  /* padding-left: 30%; */
+  text-align: left;
+  padding-left: inherit;
+
+}
+
+tr {
+
+  padding-left: 10%;
+
+}
+
+.ddd {
+
+  text-align: left;
+  margin: 5px;
+
+}
+
+.t1 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+.t1 tr {
+
+  padding-left: 0%;
+
+}
+
+.t2 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  border-top: none;
+  width: 100%;
+
+}
+
+
+.t2 tr {
+
+  padding-left: 0%;
+
+}
+
+.t3 {
+
+  border: black solid 2px;
+  border-collapse: collapse;
+  border-top: none;
+}
+
+.t3 td {
+
+  padding-left: 0%;
+  border: 2px solid black;
+  border-top: none;
+
+}
+
+.ccc {
+
+  text-align: center;
+  font-weight: bold;
+
+}
+
+.t3 th {
+
+  border: 2px solid black;
+  border-top: none;
+
+}
+
+
+.total {
+
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 10%;
+
+}
+
+.sign {
+
+  border: 1px black solid;
+  /*margin-left: 0;*/
+
+}
+
+#ToBeApplied td {
+
+  text-align: left;
+  padding: 10px;
+  padding-top: 70px;
+
+}
+
+.ackn {
+
+  font-weight: bold;
+  font-size: 10px;
+  text-decoration: underline;
+
+}
