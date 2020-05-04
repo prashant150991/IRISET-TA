@@ -14,6 +14,7 @@ class Details {
     private $objective = "";
     private $distance = "";
     private $days = "";
+    private $conti = true;
 
     /**
      * Details constructor.
@@ -29,7 +30,7 @@ class Details {
      * @param string $distance
      * @param string $days
      */
-    public function __construct($date, $startDate, $endDate, $train, $depTime, $arrTime, $fromStation, $toStation, $objective, $distance, $days) {
+    public function __construct($date, $startDate, $endDate, $train, $depTime, $arrTime, $fromStation, $toStation, $objective, $distance, $days, $conti) {
         $this->date = $date;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
@@ -41,6 +42,7 @@ class Details {
         $this->objective = $objective;
         $this->distance = $distance;
         $this->days = $days;
+        $this->conti = $conti;
     }
 
 
@@ -49,6 +51,20 @@ class Details {
      */
     public function getDate() {
         return $this->date;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getConti() {
+        return $this->conti;
+    }
+
+    /**
+     * @param bool $conti
+     */
+    public function setConti($conti) {
+        $this->conti = $conti;
     }
 
     /**

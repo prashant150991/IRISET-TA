@@ -17,6 +17,7 @@
             var counter1 = 1;
             var counter2 = 1;
             var prev = -1;
+            var flag = 0;
             if (count == 0) {
 
                 window.alert("Add at least one entry.");
@@ -27,62 +28,101 @@
                 var m = false;
                 while (counter2 <= count) {
 
-                    // window.alert("xxx "+counter2);
+                    window.alert("xxx "+counter2);
                     var x = "yo_" + counter1;
                     var y = document.getElementById(x);
                     if (y) {
-                        // console.log(y);
-                        // window.alert("Yes1");
+
+
+                        console.log(x);
+                        console.log(y);
+                        window.alert("Yes1");
 
                         var dat = y.getElementsByTagName("input");
                         console.log(dat);
+                        window.alert("fff");
                         // break;
-                        var sd = (dat[0].value);
-                        // window.alert(sd);
-                        var ed = (dat[1].value);
-                        // window.alert(ed);
-                        var nn = dat.length;
-                        // window.alert(nn);
+                        if (flag == 0) {
+                            var sd = (dat[0].value);
+                            console.log(sd);
+                            var ed = (dat[1].value);
+                            console.log(ed);
+                            var nn = dat.length;
+                            // window.alert(nn);
+                            // flag1 = 1;
+                        }
+                        else  {
 
-                        if (nn > 3) {
-                            var fs = dat[2].value;
-                            var ts = dat[3].value;
-                            var dt = dat[4].value;
-                            var at = dat[5].value;
-                            var t = dat[6].value;
-                            var d = dat[7].value;
-                            var o = dat[8].value;
+                            var sd = (dat[1].value);
+                            console.log(sd);
+                            var ed = (dat[2].value);
+                            console.log(ed);
+                            var nn = dat.length;
+
+                        }
+
+                        if ((flag == 0 && nn > 3) || (flag == 1 && nn > 4)) {
+                            if (flag == 0) {
+                                var fs = dat[2].value;
+                                var ts = dat[3].value;
+                                var dt = dat[4].value;
+                                var at = dat[5].value;
+                                var t = dat[6].value;
+                                var d = dat[7].value;
+                                var o = dat[8].value;
+                            }
+                            else {
+
+                                var fs = dat[3].value;
+                                var ts = dat[4].value;
+                                var dt = dat[5].value;
+                                var at = dat[6].value;
+                                var t = dat[7].value;
+                                var d = dat[8].value;
+                                var o = dat[9].value;
+
+                            }
                         }
                         else {
-                            var o = dat[2].value;
+                            // var o = dat[2].value;
                             // window.alert("fhfh");
                         }
                         if (sd) {
                             sd = Date.parse(sd);
-                            // window.alert(sd);
+                            window.alert(sd);
                         }
                         else {
-                            // window.alert("Nah");
+                            window.alert("Nah");
                         }
                         if (ed) {
                             ed = Date.parse(ed);
-                            // window.alert(ed);
+                            window.alert(ed);
                         }
                         if (dt) {
-                            targetS = dat[0].value;
+                            if (flag == 0) {
+                                targetS = dat[0].value;
+                            }
+                            else {
+                                targetS = dat[1].value;
+                            }
                             targetS+= " ";
                             targetS+= dt;
                             dt = new Date(targetS);
                             dt = dt.getTime();
-                            // window.alert(dt);
+                            window.alert(dt);
                         }
                         if (at) {
-                            targetE = dat[1].value;
+                            if (flag == 0) {
+                                targetS = dat[1].value;
+                            }
+                            else {
+                                targetS = dat[2].value;
+                            }
                             targetE+= " ";
                             targetE+= at;
                             at = new Date(targetE);
                             at = at.getTime();
-                            // window.alert(at);
+                            window.alert(at);
                         }
                         if (ed < sd) {
 
@@ -94,10 +134,10 @@
                         }
                         else {
 
-                            // window.alert("True");
+                            window.alert("Trueeeeeeellll");
                             if (ed == sd) {
-                                // window.alert("True1");
-                                if (nn > 3) {
+                                window.alert("True1");
+                                if ((flag == 0 && nn > 3) || (flag == 1 && nn > 4)) {
                                     if (dt >= at) {
                                         window.alert("Start time cannot be after end time");
                                         document.getElementById("arrTime_" + counter1).focus();
@@ -105,27 +145,27 @@
                                         break;
 
                                     } else {
-                                        // window.alert("True2");
-                                        m = true;
+                                        window.alert("True2");
+                                        // m = true;
 
                                     }
                                 }
                                 else {
-                                    m = true;
-                                    // window.alert("dddd")
+                                    // m = true;
+                                    window.alert("dddd")
                                 }
 
                             }
                             else {
-                                m = true;
+                                // m = true;
                             }
                             if (m == false) {
-                                break;
+                                // break;
                             }
 
                         }
                         if (m == false) {
-                            break;
+                            // break;
                         }
                         if (prev == -1) {
 
@@ -203,11 +243,11 @@
                                         break;
 
                                     } else {
-                                        m = true;
+                                        // m = true;
                                     }
                                 }
                                 else {
-                                    m = true;
+                                    // m = true;
                                 }
                             }
 
@@ -224,18 +264,326 @@
                         counter1++;
 
                     }
-
+                    flag = 1;
                 }
 
             }
+            m = false;
             return m;
 
+        }
+
+        function valu() {
+
+            var counter1 = 1;
+            var counter2 = 1;
+            var prev = -1;
+            var flag = 1;
+            var m = false;
+            while (counter2 <= count) {
+
+                var x = "yo_" + counter1;
+                console.log(x);
+                var y = document.getElementById(x);
+                console.log('Start');
+
+                if (y) {
+
+                    var dat = y.getElementsByTagName("input");
+                    var nn = dat.length;
+                    console.log("nn = "+nn);
+                    var con = counter2&flag;
+                    console.log("con = "+con);
+                    if (con) {
+
+                        var sd = (dat[0].value);
+                        console.log(sd);
+                        var ed = (dat[1].value);
+                        console.log(ed);
+
+                        if (nn > 3) {
+
+                            var fs = dat[2].value;
+                            var ts = dat[3].value;
+                            var dt = dat[4].value;
+                            var at = dat[5].value;
+                            var t = dat[6].value;
+                            var d = dat[7].value;
+                            var o = dat[8].value;
+
+                            console.log(fs);
+                            console.log(ts);
+                            console.log(dt);
+                            console.log(at);
+                            console.log(t);
+                            console.log(d);
+                            console.log(o);
+
+                        }
+                        else {
+
+                            var o = dat[2].value;
+                            console.log(o);
+
+                        }
+                        flag = 0;
+
+                    }
+                    else {
+
+                        var sd = (dat[2].value);
+                        console.log(sd);
+                        var ed = (dat[3].value);
+                        console.log(ed);
+
+                        if (nn > 5) {
+
+                            var fs = dat[4].value;
+                            var ts = dat[5].value;
+                            var dt = dat[6].value;
+                            var at = dat[7].value;
+                            var t = dat[8].value;
+                            var d = dat[9].value;
+                            var o = dat[10].value;
+
+                            console.log(fs);
+                            console.log(ts);
+                            console.log(dt);
+                            console.log(at);
+                            console.log(t);
+                            console.log(d);
+                            console.log(o);
+
+                        }
+                        else {
+
+                            var o = dat[4].value;
+                            console.log(o);
+
+                        }
+
+                    }
+                    if (dt) {
+
+                        targetS = sd;
+                        targetS+= " ";
+                        targetS+= dt;
+                        dt = new Date(targetS);
+                        dt = dt.getTime();
+                        console.log(dt);
+                    }
+                    if (at) {
+
+                        targetE = ed
+                        targetE+= " ";
+                        targetE+= at;
+                        at = new Date(targetE);
+                        at = at.getTime();
+                        console.log(at);
+                    }
+                    if (sd) {
+                        sd = Date.parse(sd);
+                        console.log(sd);
+                    }
+                    if (ed) {
+                        ed = Date.parse(ed);
+                        console.log(ed);
+                    }
+
+
+                    if (ed < sd) {
+
+                        window.alert("End Date should not be before Start Date");
+                        document.getElementById("endDate_"+counter1).focus();
+                        m = false;
+                        break;
+
+                    }
+                    else {
+
+                        console.log("Yup....everything's alright.");
+
+                    }
+                    console.log("con again = "+con);
+
+                    if (ed == sd) {
+                        console.log("sd == ed");
+                        if (at <= dt) {
+
+                            window.alert("Departure time cannot be after arrival time");
+                            document.getElementById("arrTime_" + counter1).focus();
+                            m = false;
+                            break;
+
+                        }
+                        else {
+                            console.log("Yup....everything's alright even here.");
+                            m = true;
+
+                        }
+
+                    }
+
+
+                    if (!con) {
+
+                        var xx = "yo_"+prev;
+                        var yy = document.getElementById(xx);
+                        var daa = yy.getElementsByTagName("input");
+                        var nnn = daa.length;
+                        console.log("nnn = "+nnn);
+                        var sd2;
+                        var ed2;
+                        if (nnn == 3 || nnn == 9) {
+
+                            sd2 = (daa[0].value);
+                            console.log(sd2);
+                            ed2 = (daa[1].value);
+                            console.log(ed2);
+
+                            if (nnn > 3) {
+
+                                var fs2 = daa[2].value;
+                                var ts2 = daa[3].value;
+                                var dt2 = daa[4].value;
+                                var at2 = daa[5].value;
+                                var t2 = daa[6].value;
+                                var d2 = daa[7].value;
+                                var o2 = daa[8].value;
+
+                                console.log(fs2);
+                                console.log(ts2);
+                                console.log(dt2);
+                                console.log(at2);
+                                console.log(t2);
+                                console.log(d2);
+                                console.log(o2);
+
+                            }
+                            else {
+
+                                var o2 = daa[2].value;
+                                console.log(o2);
+
+                            }
+
+                        }
+                        else {
+
+                            var sd2 = (daa[2].value);
+                            console.log(sd);
+                            var ed2 = (daa[3].value);
+                            console.log(ed);
+
+                            if (nnn > 5) {
+
+                                var fs2 = daa[4].value;
+                                var ts2 = daa[5].value;
+                                var dt2 = daa[6].value;
+                                var at2 = daa[7].value;
+                                var t2 = daa[8].value;
+                                var d2 = daa[9].value;
+                                var o2 = daa[10].value;
+
+                                console.log(fs2);
+                                console.log(ts2);
+                                console.log(dt2);
+                                console.log(at2);
+                                console.log(t2);
+                                console.log(d2);
+                                console.log(o2);
+
+                            }
+                            else {
+
+                                var o2 = daa[4].value;
+                                console.log(o2)
+
+                            }
+
+                        }
+                        if (dt2) {
+
+                            targetS2 = sd2;
+                            targetS2+= " ";
+                            targetS2+= dt2;
+                            dt2 = new Date(targetS2);
+                            dt2 = dt2.getTime();
+                            console.log(dt2);
+
+                        }
+                        if (at2) {
+
+                            targetE2 = ed2;
+                            targetE2+= " ";
+                            targetE2+= at2;
+                            at2 = new Date(targetE2);
+                            at2 = at2.getTime();
+                            console.log(at2);
+
+                        }
+                        if (sd2) {
+                            sd2 = Date.parse(sd2);
+                            console.log(sd2);
+                        }
+                        if (ed2) {
+                            ed2 = Date.parse(ed2);
+                            console.log(ed2);
+                        }
+
+                        if (ed2 > sd) {
+
+                            window.alert("Start date of next journey cannot be before end date of previous journey.");
+                            document.getElementById("startDate_"+counter1).focus();
+                            m = false;
+                            break;
+
+                        }
+                        else {
+                            if (ed2 == sd) {
+
+                                if (at2 > dt) {
+
+                                    window.alert("Second journey cannot commence without finishing first journey.")
+                                    document.getElementById("depTime_" + counter1).focus();
+                                    m = false;
+                                    break;
+
+                                }
+                                else {
+                                    m = true;
+                                }
+
+                            }
+                            else {
+
+                                m = true;
+
+                            }
+                        }
+
+                    }
+
+                    prev = counter1;
+
+                    counter2++;
+                    counter1++;
+
+                }
+                else {
+
+                    counter1++;
+
+                }
+            }
+
+            return m;
         }
 
         function getCount() {
             var m = false;
             // window.alert(count);
-            if (validate()) {
+            if (valu()) {
                 document.getElementById("trr").setAttribute("value", count);
                 m = window.confirm("Confirm Submit?");
             }
@@ -275,8 +623,16 @@
             var d = document.getElementById("travelAllowance");
             var d1 = document.getElementById("yo1");
             var d2 = document.getElementById("yo2");
-            var addi = "<div class='row justify-content-center centerBlock' id = 'yo_"+count+"'>"
-                +"<div class='row' id = 'first'>"
+
+            var addi = "<div class = 'row justify-content-center centerBlock' id = 'yo_"+count+"'>";
+            if (count > 1) {
+
+                addi += "<div class = 'row chec'>"
+                    +"Is the gap eligible for TA? &nbsp&nbsp&nbsp&nbsp<input type = 'radio' id = 'continuous_"+count+"' value = 'yes' checked = 'checked' name = 'conti_"+count+"' > &nbspYes&nbsp&nbsp<br><input type = 'radio' id = 'continuous_"+count+"' value = 'no'  name = 'conti_"+count+"' > &nbspNo </div>";
+
+            }
+
+                addi+="<div class='row' id = 'first'>"
                 +count
                 +"<div class='form-row' id = 'firstf'>"
                 +"<div class='col-lg-3 col-xs-12' id = 'first1'>"
@@ -377,8 +733,16 @@
             var startDate = "startDate_"+count;
             var d = document.getElementById("travelAllowance");
 
-            var addi = "<div class = 'row justify-content-center centerBlock' id = 'yo_"+count+"'>"
-                +"<div class = 'row' id = 'fourth'>"
+
+            var addi = "<div class = 'row justify-content-center centerBlock' id = 'yo_"+count+"'>";
+            if (count > 1) {
+
+                addi += "<div class = 'row chec'>"
+                    +"Is the gap eligible for TA? &nbsp&nbsp&nbsp&nbsp<input type = 'radio' id = 'continuous_"+count+"' value = 'yes' checked = 'checked' name = 'conti_"+count+"' >&nbspYes&nbsp&nbsp<br><input type = 'radio' id = 'continuous_"+count+"' value = 'no'  name = 'conti_"+count+"' >No </div>";
+
+            }
+
+            addi+= "<div class = 'row' id = 'fourth'>"
                 +count
                 +"<div class = 'form-row' id = 'fourthf'>"
                 +"<div class = 'col-lg-3 col-xs-12' id = 'fourth1'>"
@@ -436,7 +800,7 @@
         </h2>
     </div>
 
-    <form method='POST' action='trial.php' onsubmit="return getCount()">
+    <form method='POST' target='_blank' action='trial.php' onsubmit="return getCount()">
         <div class= 'row'>
             <div class='form-row'>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>

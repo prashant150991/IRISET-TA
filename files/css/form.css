@@ -132,6 +132,7 @@ hr.style4 {
 #first {
 
     width: 100%;
+    padding-bottom: 1px;
 
 }
 
@@ -149,7 +150,7 @@ hr.style4 {
 
 #fourth {
 
-    /*width: 100%;*/
+    padding-bottom: 1px;
 
 }
 
@@ -199,5 +200,12 @@ hr.style4 {
 .mand {
 
     color: red;
+
+}
+
+.chec {
+
+    padding: 10px;
+    margin: 10px;
 
 }

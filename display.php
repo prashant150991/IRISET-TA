@@ -451,9 +451,10 @@ class Display {
     public function displayTravelTableBody() {
 
         $array = $this->getEnd();
+//        $this->display($array);
         $total = 0;
         foreach ($array as $row) {
-
+//            $this->display($row);
             if ($row->getType() == "Travel") {
                 $total = $this->displayTravelEntry($row, $total);
             }
@@ -478,9 +479,18 @@ class Display {
 
     }
 
+    public function display_($data) {
+
+        echo "<pre>";
+        var_dump($data);
+        echo "<pre>";
+        
+    }
+    
     public function display() {
 
         echo "<div class='main'>";
+//        $this->display_($this->getEnd());
         $this->displayOfficerData();
         $this->displayTravelData();
         echo "</div>";
