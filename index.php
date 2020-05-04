@@ -19,11 +19,11 @@
         <div class="col-md-6 offset-md-3 uuu">
             <div class="list-group">
                 <a href="./" class="list-group-item list-group-item-action list-group-item-info" style="text-align: center"><img src="files/images/logo.jpg" height="50" width="50"> IRISET Travel Allowance generator</a>
-                <a href="./instructions.php" class="list-group-item list-group-item-action">
+                <a href="./extras/instructions.php" class="list-group-item list-group-item-action">
                     Instructions for filling the form.
                 </a>
-                <a href="./credits.php" class="list-group-item list-group-item-action">Credits</a>
-                <button style="text-align: center" onclick="location.href = './form.php'" type="button" class="list-group-item list-group-item-action list-group-item-success">Click here to get started.</button>
+                <a href="./extras/credits.php" class="list-group-item list-group-item-action">Credits</a>
+                <button style="text-align: center" onclick="location.href = './requires/form.php'" type="button" class="list-group-item list-group-item-action list-group-item-success">Click here to get started.</button>
             </div>
         </div>
     </div>

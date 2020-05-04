@@ -3,8 +3,8 @@
     <title>
         Travel Allowance
     </title>
-    <link href="./files/css/ta.css" rel="stylesheet" type="text/css">
-    <link href="./files/css/taPrint.css" rel="stylesheet" type="text/css" media="print">
+    <link href="../files/css/ta.css" rel="stylesheet" type="text/css">
+    <link href="../files/css/taPrint.css" rel="stylesheet" type="text/css" media="print">
 
 </head>
 
@@ -19,7 +19,7 @@
 <body>
     <div class="headd">
         <div class="column1">
-            <img src = "./files/images/logo.jpg" height:"70px", width="70px">
+            <img src = "../files/images/logo.jpg" height:"70px", width="70px">
         </div>
         <div class="column2" >
             <div class = "yo" >

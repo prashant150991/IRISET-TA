@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!--    <link href="./files/css/form.css" rel="stylesheet" type="text/css">-->
-    <script href="./files/js/jquery-3.4.1.min.js"></script>
-    <script href="./files/js/bootstrap.min.js"></script>
-    <link href="files/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="files/css/form.css" rel="stylesheet" type="text/css">
+    <script href="../files/js/jquery-3.4.1.min.js"></script>
+    <script href="../files/js/bootstrap.min.js"></script>
+    <link href="../files/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../files/css/form.css" rel="stylesheet" type="text/css">
 
     <script language="JavaScript">
         var count = 0;
@@ -279,304 +279,300 @@
             var counter2 = 1;
             var prev = -1;
             var flag = 1;
-            var m = false;
-            while (counter2 <= count) {
+            if (count == 0) {
 
-                var x = "yo_" + counter1;
-                console.log(x);
-                var y = document.getElementById(x);
-                console.log('Start');
+                window.alert("Add at least one entry.");
+                return false;
 
-                if (y) {
+            }
+            else {
+                var m = false;
+                while (counter2 <= count) {
 
-                    var dat = y.getElementsByTagName("input");
-                    var nn = dat.length;
-                    console.log("nn = "+nn);
-                    var con = counter2&flag;
-                    console.log("con = "+con);
-                    if (con) {
+                    var x = "yo_" + counter1;
+                    console.log(x);
+                    var y = document.getElementById(x);
+                    console.log('Start');
 
-                        var sd = (dat[0].value);
-                        console.log(sd);
-                        var ed = (dat[1].value);
-                        console.log(ed);
+                    if (y) {
 
-                        if (nn > 3) {
+                        var dat = y.getElementsByTagName("input");
+                        var nn = dat.length;
+                        console.log("nn = " + nn);
+                        var con = counter2 & flag;
+                        console.log("con = " + con);
+                        if (con) {
 
-                            var fs = dat[2].value;
-                            var ts = dat[3].value;
-                            var dt = dat[4].value;
-                            var at = dat[5].value;
-                            var t = dat[6].value;
-                            var d = dat[7].value;
-                            var o = dat[8].value;
+                            var sd = (dat[0].value);
+                            console.log(sd);
+                            var ed = (dat[1].value);
+                            console.log(ed);
 
-                            console.log(fs);
-                            console.log(ts);
+                            if (nn > 3) {
+
+                                var fs = dat[2].value;
+                                var ts = dat[3].value;
+                                var dt = dat[4].value;
+                                var at = dat[5].value;
+                                var t = dat[6].value;
+                                var d = dat[7].value;
+                                var o = dat[8].value;
+
+                                console.log(fs);
+                                console.log(ts);
+                                console.log(dt);
+                                console.log(at);
+                                console.log(t);
+                                console.log(d);
+                                console.log(o);
+
+                            } else {
+
+                                var o = dat[2].value;
+                                console.log(o);
+
+                            }
+                            flag = 0;
+
+                        } else {
+
+                            var sd = (dat[2].value);
+                            console.log(sd);
+                            var ed = (dat[3].value);
+                            console.log(ed);
+
+                            if (nn > 5) {
+
+                                var fs = dat[4].value;
+                                var ts = dat[5].value;
+                                var dt = dat[6].value;
+                                var at = dat[7].value;
+                                var t = dat[8].value;
+                                var d = dat[9].value;
+                                var o = dat[10].value;
+
+                                console.log(fs);
+                                console.log(ts);
+                                console.log(dt);
+                                console.log(at);
+                                console.log(t);
+                                console.log(d);
+                                console.log(o);
+
+                            } else {
+
+                                var o = dat[4].value;
+                                console.log(o);
+
+                            }
+
+                        }
+                        if (dt) {
+
+                            targetS = sd;
+                            targetS += " ";
+                            targetS += dt;
+                            dt = new Date(targetS);
+                            dt = dt.getTime();
                             console.log(dt);
+                        }
+                        if (at) {
+
+                            targetE = ed
+                            targetE += " ";
+                            targetE += at;
+                            at = new Date(targetE);
+                            at = at.getTime();
                             console.log(at);
-                            console.log(t);
-                            console.log(d);
-                            console.log(o);
-
                         }
-                        else {
-
-                            var o = dat[2].value;
-                            console.log(o);
-
+                        if (sd) {
+                            sd = Date.parse(sd);
+                            console.log(sd);
                         }
-                        flag = 0;
-
-                    }
-                    else {
-
-                        var sd = (dat[2].value);
-                        console.log(sd);
-                        var ed = (dat[3].value);
-                        console.log(ed);
-
-                        if (nn > 5) {
-
-                            var fs = dat[4].value;
-                            var ts = dat[5].value;
-                            var dt = dat[6].value;
-                            var at = dat[7].value;
-                            var t = dat[8].value;
-                            var d = dat[9].value;
-                            var o = dat[10].value;
-
-                            console.log(fs);
-                            console.log(ts);
-                            console.log(dt);
-                            console.log(at);
-                            console.log(t);
-                            console.log(d);
-                            console.log(o);
-
-                        }
-                        else {
-
-                            var o = dat[4].value;
-                            console.log(o);
-
+                        if (ed) {
+                            ed = Date.parse(ed);
+                            console.log(ed);
                         }
 
-                    }
-                    if (dt) {
 
-                        targetS = sd;
-                        targetS+= " ";
-                        targetS+= dt;
-                        dt = new Date(targetS);
-                        dt = dt.getTime();
-                        console.log(dt);
-                    }
-                    if (at) {
+                        if (ed < sd) {
 
-                        targetE = ed
-                        targetE+= " ";
-                        targetE+= at;
-                        at = new Date(targetE);
-                        at = at.getTime();
-                        console.log(at);
-                    }
-                    if (sd) {
-                        sd = Date.parse(sd);
-                        console.log(sd);
-                    }
-                    if (ed) {
-                        ed = Date.parse(ed);
-                        console.log(ed);
-                    }
-
-
-                    if (ed < sd) {
-
-                        window.alert("End Date should not be before Start Date");
-                        document.getElementById("endDate_"+counter1).focus();
-                        m = false;
-                        break;
-
-                    }
-                    else {
-
-                        console.log("Yup....everything's alright.");
-
-                    }
-                    console.log("con again = "+con);
-
-                    if (ed == sd) {
-                        console.log("sd == ed");
-                        if (at <= dt) {
-
-                            window.alert("Departure time cannot be after arrival time");
-                            document.getElementById("arrTime_" + counter1).focus();
+                            window.alert("End Date should not be before Start Date");
+                            document.getElementById("endDate_" + counter1).focus();
                             m = false;
                             break;
 
-                        }
-                        else {
-                            console.log("Yup....everything's alright even here.");
+                        } else {
+
+                            console.log("Yup....everything's alright.");
                             m = true;
 
                         }
+                        console.log("con again = " + con);
 
-                    }
+                        if (ed == sd) {
+                            console.log("sd == ed");
+                            if (at <= dt) {
 
+                                window.alert("Departure time cannot be after arrival time");
+                                document.getElementById("arrTime_" + counter1).focus();
+                                m = false;
+                                break;
 
-                    if (!con) {
-
-                        var xx = "yo_"+prev;
-                        var yy = document.getElementById(xx);
-                        var daa = yy.getElementsByTagName("input");
-                        var nnn = daa.length;
-                        console.log("nnn = "+nnn);
-                        var sd2;
-                        var ed2;
-                        if (nnn == 3 || nnn == 9) {
-
-                            sd2 = (daa[0].value);
-                            console.log(sd2);
-                            ed2 = (daa[1].value);
-                            console.log(ed2);
-
-                            if (nnn > 3) {
-
-                                var fs2 = daa[2].value;
-                                var ts2 = daa[3].value;
-                                var dt2 = daa[4].value;
-                                var at2 = daa[5].value;
-                                var t2 = daa[6].value;
-                                var d2 = daa[7].value;
-                                var o2 = daa[8].value;
-
-                                console.log(fs2);
-                                console.log(ts2);
-                                console.log(dt2);
-                                console.log(at2);
-                                console.log(t2);
-                                console.log(d2);
-                                console.log(o2);
-
-                            }
-                            else {
-
-                                var o2 = daa[2].value;
-                                console.log(o2);
-
-                            }
-
-                        }
-                        else {
-
-                            var sd2 = (daa[2].value);
-                            console.log(sd);
-                            var ed2 = (daa[3].value);
-                            console.log(ed);
-
-                            if (nnn > 5) {
-
-                                var fs2 = daa[4].value;
-                                var ts2 = daa[5].value;
-                                var dt2 = daa[6].value;
-                                var at2 = daa[7].value;
-                                var t2 = daa[8].value;
-                                var d2 = daa[9].value;
-                                var o2 = daa[10].value;
-
-                                console.log(fs2);
-                                console.log(ts2);
-                                console.log(dt2);
-                                console.log(at2);
-                                console.log(t2);
-                                console.log(d2);
-                                console.log(o2);
-
-                            }
-                            else {
-
-                                var o2 = daa[4].value;
-                                console.log(o2)
-
-                            }
-
-                        }
-                        if (dt2) {
-
-                            targetS2 = sd2;
-                            targetS2+= " ";
-                            targetS2+= dt2;
-                            dt2 = new Date(targetS2);
-                            dt2 = dt2.getTime();
-                            console.log(dt2);
-
-                        }
-                        if (at2) {
-
-                            targetE2 = ed2;
-                            targetE2+= " ";
-                            targetE2+= at2;
-                            at2 = new Date(targetE2);
-                            at2 = at2.getTime();
-                            console.log(at2);
-
-                        }
-                        if (sd2) {
-                            sd2 = Date.parse(sd2);
-                            console.log(sd2);
-                        }
-                        if (ed2) {
-                            ed2 = Date.parse(ed2);
-                            console.log(ed2);
-                        }
-
-                        if (ed2 > sd) {
-
-                            window.alert("Start date of next journey cannot be before end date of previous journey.");
-                            document.getElementById("startDate_"+counter1).focus();
-                            m = false;
-                            break;
-
-                        }
-                        else {
-                            if (ed2 == sd) {
-
-                                if (at2 > dt) {
-
-                                    window.alert("Second journey cannot commence without finishing first journey.")
-                                    document.getElementById("depTime_" + counter1).focus();
-                                    m = false;
-                                    break;
-
-                                }
-                                else {
-                                    m = true;
-                                }
-
-                            }
-                            else {
-
+                            } else {
+                                console.log("Yup....everything's alright even here.");
                                 m = true;
 
                             }
+
                         }
 
+
+                        if (!con) {
+
+                            var xx = "yo_" + prev;
+                            var yy = document.getElementById(xx);
+                            var daa = yy.getElementsByTagName("input");
+                            var nnn = daa.length;
+                            console.log("nnn = " + nnn);
+                            var sd2;
+                            var ed2;
+                            if (nnn == 3 || nnn == 9) {
+
+                                sd2 = (daa[0].value);
+                                console.log(sd2);
+                                ed2 = (daa[1].value);
+                                console.log(ed2);
+
+                                if (nnn > 3) {
+
+                                    var fs2 = daa[2].value;
+                                    var ts2 = daa[3].value;
+                                    var dt2 = daa[4].value;
+                                    var at2 = daa[5].value;
+                                    var t2 = daa[6].value;
+                                    var d2 = daa[7].value;
+                                    var o2 = daa[8].value;
+
+                                    console.log(fs2);
+                                    console.log(ts2);
+                                    console.log(dt2);
+                                    console.log(at2);
+                                    console.log(t2);
+                                    console.log(d2);
+                                    console.log(o2);
+
+                                } else {
+
+                                    var o2 = daa[2].value;
+                                    console.log(o2);
+
+                                }
+
+                            } else {
+
+                                var sd2 = (daa[2].value);
+                                console.log(sd);
+                                var ed2 = (daa[3].value);
+                                console.log(ed);
+
+                                if (nnn > 5) {
+
+                                    var fs2 = daa[4].value;
+                                    var ts2 = daa[5].value;
+                                    var dt2 = daa[6].value;
+                                    var at2 = daa[7].value;
+                                    var t2 = daa[8].value;
+                                    var d2 = daa[9].value;
+                                    var o2 = daa[10].value;
+
+                                    console.log(fs2);
+                                    console.log(ts2);
+                                    console.log(dt2);
+                                    console.log(at2);
+                                    console.log(t2);
+                                    console.log(d2);
+                                    console.log(o2);
+
+                                } else {
+
+                                    var o2 = daa[4].value;
+                                    console.log(o2)
+
+                                }
+
+                            }
+                            if (dt2) {
+
+                                targetS2 = sd2;
+                                targetS2 += " ";
+                                targetS2 += dt2;
+                                dt2 = new Date(targetS2);
+                                dt2 = dt2.getTime();
+                                console.log(dt2);
+
+                            }
+                            if (at2) {
+
+                                targetE2 = ed2;
+                                targetE2 += " ";
+                                targetE2 += at2;
+                                at2 = new Date(targetE2);
+                                at2 = at2.getTime();
+                                console.log(at2);
+
+                            }
+                            if (sd2) {
+                                sd2 = Date.parse(sd2);
+                                console.log(sd2);
+                            }
+                            if (ed2) {
+                                ed2 = Date.parse(ed2);
+                                console.log(ed2);
+                            }
+
+                            if (ed2 > sd) {
+
+                                window.alert("Start date of next journey cannot be before end date of previous journey.");
+                                document.getElementById("startDate_" + counter1).focus();
+                                m = false;
+                                break;
+
+                            } else {
+                                if (ed2 == sd) {
+
+                                    if (at2 > dt) {
+
+                                        window.alert("Second journey cannot commence without finishing first journey.")
+                                        document.getElementById("depTime_" + counter1).focus();
+                                        m = false;
+                                        break;
+
+                                    } else {
+                                        m = true;
+                                    }
+
+                                } else {
+
+                                    m = true;
+
+                                }
+                            }
+
+                        }
+
+                        prev = counter1;
+
+                        counter2++;
+                        counter1++;
+
+                    } else {
+
+                        counter1++;
+
                     }
-
-                    prev = counter1;
-
-                    counter2++;
-                    counter1++;
-
-                }
-                else {
-
-                    counter1++;
-
                 }
             }
-
             return m;
         }
 
