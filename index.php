@@ -15,10 +15,13 @@
 
 <div class="container align-items-center">
 <div class="box">
+    <div class="row align-content-center hhh">
+        <img src="./files/images/logo.jpg" height="100" width="100">
+    </div>
     <div class="row align-content-center">
         <div class="col-md-6 offset-md-3 uuu">
             <div class="list-group">
-                <a href="./" class="list-group-item list-group-item-action list-group-item-info" style="text-align: center"><img src="files/images/logo.jpg" height="50" width="50"> IRISET Travel Allowance generator</a>
+                <a href="./" class="list-group-item list-group-item-primary list-group-item-mine" style="text-align: center">IRISET Travel Allowance generator</a>
                 <a href="./extras/instructions.php" class="list-group-item list-group-item-action">
                     Instructions for filling the form.
                 </a>

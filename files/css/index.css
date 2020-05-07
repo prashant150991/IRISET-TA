@@ -8,8 +8,41 @@
 
 }
 
-.uuu {
+.hhh {
+
+    /*padding-left: 46%;*/
+    /*padding-right: auto;*/
+    padding-bottom: 2%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a.list-group-item-mine{
+
+    background-color: #4699bf;
+    color: #FFFFFF;
+
+}
+
+a.list-group-item-mine:hover{
+
+    background-color: #4699bf;
+    color: #FFFFFF;
+
+}
+
+button.list-group-item-success{
+
+    background-color: #19bf34;
+    color: #FFFFFF;
 
 
+}
+
+.button:hover{
+
+    background-color: #19bf34;
+    color: #FFFFFF;
 
 }

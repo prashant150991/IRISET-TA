@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <title>Travel Allowance</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!--    <link href="./files/css/form.css" rel="stylesheet" type="text/css">-->
@@ -11,267 +12,6 @@
 
     <script language="JavaScript">
         var count = 0;
-
-        function validate() {
-
-            var counter1 = 1;
-            var counter2 = 1;
-            var prev = -1;
-            var flag = 0;
-            if (count == 0) {
-
-                window.alert("Add at least one entry.");
-                return false;
-
-            }
-            else {
-                var m = false;
-                while (counter2 <= count) {
-
-                    window.alert("xxx "+counter2);
-                    var x = "yo_" + counter1;
-                    var y = document.getElementById(x);
-                    if (y) {
-
-
-                        console.log(x);
-                        console.log(y);
-                        window.alert("Yes1");
-
-                        var dat = y.getElementsByTagName("input");
-                        console.log(dat);
-                        window.alert("fff");
-                        // break;
-                        if (flag == 0) {
-                            var sd = (dat[0].value);
-                            console.log(sd);
-                            var ed = (dat[1].value);
-                            console.log(ed);
-                            var nn = dat.length;
-                            // window.alert(nn);
-                            // flag1 = 1;
-                        }
-                        else  {
-
-                            var sd = (dat[1].value);
-                            console.log(sd);
-                            var ed = (dat[2].value);
-                            console.log(ed);
-                            var nn = dat.length;
-
-                        }
-
-                        if ((flag == 0 && nn > 3) || (flag == 1 && nn > 4)) {
-                            if (flag == 0) {
-                                var fs = dat[2].value;
-                                var ts = dat[3].value;
-                                var dt = dat[4].value;
-                                var at = dat[5].value;
-                                var t = dat[6].value;
-                                var d = dat[7].value;
-                                var o = dat[8].value;
-                            }
-                            else {
-
-                                var fs = dat[3].value;
-                                var ts = dat[4].value;
-                                var dt = dat[5].value;
-                                var at = dat[6].value;
-                                var t = dat[7].value;
-                                var d = dat[8].value;
-                                var o = dat[9].value;
-
-                            }
-                        }
-                        else {
-                            // var o = dat[2].value;
-                            // window.alert("fhfh");
-                        }
-                        if (sd) {
-                            sd = Date.parse(sd);
-                            window.alert(sd);
-                        }
-                        else {
-                            window.alert("Nah");
-                        }
-                        if (ed) {
-                            ed = Date.parse(ed);
-                            window.alert(ed);
-                        }
-                        if (dt) {
-                            if (flag == 0) {
-                                targetS = dat[0].value;
-                            }
-                            else {
-                                targetS = dat[1].value;
-                            }
-                            targetS+= " ";
-                            targetS+= dt;
-                            dt = new Date(targetS);
-                            dt = dt.getTime();
-                            window.alert(dt);
-                        }
-                        if (at) {
-                            if (flag == 0) {
-                                targetS = dat[1].value;
-                            }
-                            else {
-                                targetS = dat[2].value;
-                            }
-                            targetE+= " ";
-                            targetE+= at;
-                            at = new Date(targetE);
-                            at = at.getTime();
-                            window.alert(at);
-                        }
-                        if (ed < sd) {
-
-                            window.alert("End Date should not be before Start Date");
-                            document.getElementById("endDate_"+counter1).focus();
-                            m = false;
-                            break;
-
-                        }
-                        else {
-
-                            window.alert("Trueeeeeeellll");
-                            if (ed == sd) {
-                                window.alert("True1");
-                                if ((flag == 0 && nn > 3) || (flag == 1 && nn > 4)) {
-                                    if (dt >= at) {
-                                        window.alert("Start time cannot be after end time");
-                                        document.getElementById("arrTime_" + counter1).focus();
-                                        m = false;
-                                        break;
-
-                                    } else {
-                                        window.alert("True2");
-                                        // m = true;
-
-                                    }
-                                }
-                                else {
-                                    // m = true;
-                                    window.alert("dddd")
-                                }
-
-                            }
-                            else {
-                                // m = true;
-                            }
-                            if (m == false) {
-                                // break;
-                            }
-
-                        }
-                        if (m == false) {
-                            // break;
-                        }
-                        if (prev == -1) {
-
-
-                        }
-                        else {
-
-                            // window.alert("Into the wild");
-                            // break;
-
-                            var xx = "yo_" + prev;
-                            // window.alert(xx);
-                            var yy = document.getElementById(xx);
-                            var daa = yy.getElementsByTagName("input");
-                            // console.log(dat);
-                            var nnn = daa.length;
-                            var sd2 = (daa[0].value);
-                            var ed2 = (daa[1].value);
-                            if (nnn > 3) {
-                                var fs2 = daa[2].value;
-                                var ts2 = daa[3].value;
-                                var dt2 = daa[4].value;
-                                var at2 = daa[5].value;
-                                var t2 = daa[6].value;
-                                var d2 = daa[7].value;
-                                var o2 = daa[8].value;
-                            }
-                            else {
-
-                                var o2 = daa[2].value;
-
-                            }
-
-
-                            if (sd2) {
-                                sd2 = Date.parse(sd2);
-                            }
-                            if (ed2) {
-                                ed2 = Date.parse(ed2);
-                            }
-                            if (dt2) {
-
-                                targetS2 = dat[0].value;
-                                targetS2+= " ";
-                                targetS2+= dt2;
-                                dt2 = new Date(targetS2);
-                                dt2 = dt2.getTime();
-
-                            }
-                            if (at2) {
-
-                                targetE2 = dat[0].value;
-                                targetE2+= " ";
-                                targetE2+= at2;
-                                at2 = new Date(targetE2);
-                                at2 = at2.getTime();
-
-                            }
-                            if (ed2 > sd) {
-
-                                window.alert("Start date of next journey cannot be before end date of previous journey.");
-                                document.getElementById("startDate_"+counter1).focus();
-                                m = false;
-                                break;
-
-                            }
-                            else if (ed2 == sd) {
-
-                                if(nnn > 3 && nn > 3) {
-                                    if (at2 > dt) {
-
-                                        window.alert("Second journey cannot commence without finishing first journey.")
-                                        document.getElementById("depTime_" + counter1).focus();
-                                        m = false;
-                                        break;
-
-                                    } else {
-                                        // m = true;
-                                    }
-                                }
-                                else {
-                                    // m = true;
-                                }
-                            }
-
-                        }
-                        // m = true;
-                        prev = counter1;
-                        counter1++;
-                        counter2++;
-
-                    } else {
-
-                        // window.alert("No");
-                        // return false;
-                        counter1++;
-
-                    }
-                    flag = 1;
-                }
-
-            }
-            m = false;
-            return m;
-
-        }
 
         function valu() {
 
@@ -722,8 +462,6 @@
 
         }
 
-
-
         function insertRowForStay(){
             count=count+1;
             var startDate = "startDate_"+count;
@@ -791,12 +529,14 @@
 
 <div class='container'>
     <div class='row justify-content-center heading'>
+        <a href = "../">
         <h2>
-            IRISET TRAVELLING ALLOWANCE JOURNAL
+            IRISET TRAVELLING ALLOWANCE JOURNAL (β)
         </h2>
+        </a>
     </div>
 
-    <form method='POST' target='_blank' action='trial.php' onsubmit="return getCount()">
+    <form method='POST' target='_blank' action='trial6.php' onsubmit="return getCount()">
         <div class= 'row'>
             <div class='form-row'>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
@@ -862,6 +602,9 @@
             </div>
         </div>
     </form>
+    <div class="row">
+
+    </div>
 </div>
 <!--<hr class="style4">-->
 

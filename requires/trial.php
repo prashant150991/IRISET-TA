@@ -299,14 +299,16 @@ class Trial {
 
     }
 
-    public function getRate($time, $ref) {
-
-        $this->display("Time ".$time);
-        $this->display("Ref ".$ref);
+    public function getHours($time, $ref) {
 
         $diff = $this->timeToInt($ref) - $this->timeToInt($time);
         $diff = abs($diff);
-//        $this->display("Diff ".$diff);
+        return $diff;
+
+    }
+
+    public function getDiv($diff) {
+
         if ($diff >0 && $diff <= 6) {
             return 0.3;
         }
@@ -318,6 +320,18 @@ class Trial {
         elseif ($diff > 12) {
             return 1;
         }
+
+    }
+
+    public function getRate($time, $ref) {
+
+        $this->display("Time ".$time);
+        $this->display("Ref ".$ref);
+
+        $diff = $this->getHours($time, $ref);
+//        $this->display("Diff ".$diff);
+
+        return $this->getDiv($diff);
 
     }
 
@@ -503,17 +517,32 @@ class Trial {
 
         $end = [];
         $ref = "00:00";
+        $add = 0;
 
         for ($i = 0; $i < $count; $i++) {
-
-            $this->display($details[$i]);
 
             $startDate = $details[$i]->getStartDate();
             $endDate = $details[$i]->getEndDate();
             $startTime = $details[$i]->getDepTime();
             $endTime = $details[$i]->getArrTime();
+            $current = $details[$i];
+            if ($i+1 < $count) {
+                $next = $details[$i+1];
+                $nextStartDate = $details[$i + 1]->getStartDate();
+                $nextEndDate = $details[$i+1]->getEndDate();
+                $nextStartTime = $details[$i+1]->getDepTime();
+                $nextEndTime = $details[$i+1]->getArrTime();
+            }
+            if ($i > 0) {
+                $prev = $details[$i-1];
+                $prevStartDate = $details[$i-1]->getStartDate();
+                $prevEndDate = $details[$i-1]->getEndDate();
+                $prevStartTime = $details[$i-1]->getDepTime();
+                $prevEndTime = $details[$i-1]->getArrTime();
 
-            if ($this->isTravel($details[$i])) {    //  Travel Entry.
+            }
+
+            if ($this->isTravel($current)) {    //  Travel Entry.
 
                 $this->display("Travel Entry ".$i);
                 $this->display("Territory 1");
@@ -528,7 +557,7 @@ class Trial {
 //                        $this->display("Only row");
                         $this->display("Territory 1.1.1");
 
-                        if ($details[$i]->getStartDate() == $details[$i]->getEndDate()) {   //  [a-a]
+                        if ($startDate == $endDate) {   //  [a-a]
 
                             $this->display("Territory 1.1.1.1");
                             $row = $this->setFullRowTravelling($details, $i, 0);
@@ -536,7 +565,7 @@ class Trial {
                             array_push($end, $row);
 
                         }
-                        elseif ($details[$i]->getStartDate() != $details[$i]->getEndDate()) {   //  [a-b]
+                        elseif ($startDate!= $endDate) {   //  [a-b]
 
                             $this->display("Territory 1.1.1.2");
                             $row = $this->setHalfRowTravelling($details, $i,0);
@@ -555,18 +584,42 @@ class Trial {
                     else {  //  First row but not the only row.
 
                         $this->display("Territory 1.1.2");
-                        if ($this->isTravel($details[$i+1])) {      //  If next entry is travel.
+                        if ($this->isTravel($next)) {      //  If next entry is travel.
 
                             $this->display("Territory 1.1.2.1");
-                            if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     // ([y-a][a-x]) or ([y-b][b-x])
+                            if ($endDate == $nextStartDate) {     // ([y-a][a-x]) or ([y-b][b-x])
                                 //  Continuous journey.
                                 $this->display("Territory 1.1.2.1.1");
                                 if ($startDate == $endDate) {   //  ([a-a][a-x])
 
                                     $this->display("Territory 1.1.2.1.1.1");
                                     $row = $this->setFullRowTravelling($details, $i, 0);
-                                    $ref = $startTime;
+                                    $add+= $this->getHours($startTime, $endTime);
+//                                    $this->dasp("Add = ".$add);
                                     array_push($end, $row);
+
+                                    if ($endTime == $nextStartTime) {
+
+                                        $ref = $nextStartTime;
+                                        $this->dasp("Ref = ".$ref);
+
+                                    }
+                                    else {
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, $nextStartTime);
+                                            $ref = $nextStartTime;
+
+
+                                        }
+                                        else {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+
+                                    }
 
                                 }
                                 else {  //  ([a-b][b-x])
@@ -650,36 +703,40 @@ class Trial {
                             if ($startDate == $endDate) {   //  ([a-a][x-y])
 
                                 $this->display("Territory 1.1.2.2.1");
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-a][a-y])
+                                if ($endDate == $nextStartDate) {     //  ([a-a][a-y])
 
                                     $this->display("Territory 1.1.2.2.1.1");
                                     $row = $this->setFullRowTravelling($details, $i, 0);
-                                    $ref = $startTime;
+                                    $add+= $this->getHours($startTime, $endTime);
+                                    $ref = $endTime;
                                     $this->display("Ref ".$ref);
                                     array_push($end, $row);
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-a][b-y])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-a][b-y])
 
                                     //  Not continuous. Check again.
                                     $this->display("Territory 1.1.2.2.1.2");
                                     $row = $this->setFullRowTravelling($details, $i, 0);
-                                    if ($details[$i+1]->getConti() == true) {
+                                    $add+= $this->getHours($startTime, $endTime);
+                                    if ($next->getConti() == true) {
 
-                                        $row->setDays($this->getRate($startTime, "24:00"));
+                                        $add+= $this->getHours($endTime, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
 
                                         $end = $this->setContiRows($details, $i, $end);
                                         $ref = "00:00";
-
+                                        $add = 0;
 
                                     }
                                     else {
 
-                                        $row = $this->setFullRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($startTime, $endTime));
+//                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $row->setDays($this->getDiv($add));
                                         $ref = "00:00";
                                         array_push($end, $row);
+                                        $add = 0;
 
                                     }
 
@@ -689,46 +746,53 @@ class Trial {
                             elseif ($startDate != $endDate) {   //  ([a-b][x-y])
 
                                 $this->display("Territory 1.1.2.2.2");
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-b][b-y])
+                                if ($endDate == $nextStartDate) {     //  ([a-b][b-y])
 
                                     $this->display("Territory 1.1.2.2.2.1");
                                     $row = $this->setHalfRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($startTime, "24:00"));
+                                    $add+= $this->getHours($startTime, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
+                                    $add = 0;
 
                                     $end = $this->setMidTravel($details, $i, $end);
 
                                     $row = $this->setHalfRowTravelling($details, $i, 1);
-                                    $ref = "00:00";
+                                    $add+= $this->getHours("00:00", $endTime);
+                                    $ref = $endTime;
                                     array_push($end, $row);
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-b][c-y])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-b][c-y])
 
                                     //  Not continuous. Check again.
                                     $this->display("Territory 1.1.2.2.2.2");
                                     $row = $this->setHalfRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($startTime, "24:00"));
+                                    $add+= $this->getHours($startTime, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
+                                    $add = 0;
 
                                     $end = $this->setMidTravel($details, $i, $end);
 
-
                                     $row = $this->setHalfRowTravelling($details, $i, 1);
-                                    if ($details[$i+1]->getConti() == true) {
+                                    $add+= $this->getHours("00:00", $endTime);
+                                    if ($next->getConti() == true) {
 
-                                        $row->setDays(1);
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($endTime, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
 
                                         $end = $this->setContiRows($details, $i, $end);
                                         $ref = "00:00";
+                                        $add = 0;
 
                                     }
                                     else {
 
-                                        $row->setDays($this->getRate("00:00", $endTime));
+                                        $row->setDays($this->getDiv($add));
                                         $ref = "00:00";
+                                        $add = 0;
                                         array_push($end, $row);
 
                                     }
@@ -749,25 +813,29 @@ class Trial {
 
                         $this->display("Territory 1.2.1");
 
-                        if ($this->isTravel($details[$i-1])) {  //  If previous is travel.
+                        if ($this->isTravel($prev)) {  //  If previous is travel.
 
                             $this->display("Territory 1.2.1.1");
-                            if ($details[$i - 1]->getEndDate() == $details[$i]->getStartDate()) {   //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) {   //  ([x-a][a-y])
 
                                 $this->display("Territory 1.2.1.1.1");
-                                if ($details[$i]->getStartDate() == $details[$i]->getEndDate()) {   //  ([x-a][a-a])
+                                if ($startDate == $endDate) {   //  ([x-a][a-a])
 
                                     $this->display("Territory 1.2.1.1.1.1");
                                     $row = $this->setFullRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($ref, $endTime));
+                                    $add+= $this->getHours($ref, $endTime);
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
+                                    $this->dasp("Add = ".$add);
+                                    $this->dasp("Ref = ".$ref);
 
                                 }
-                                elseif ($details[$i]->getStartDate() != $details[$i]->getEndDate()) {     //  ([x-a][a-b])
+                                elseif ($startDate != $endDate) {     //  ([x-a][a-b])
 
                                     $this->display("Territory 1.2.1.1.1.2");
                                     $row = $this->setHalfRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                     $end = $this->setMidTravel($details, $i, $end);
@@ -778,7 +846,7 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i - 1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous journey.
                                 $this->display("Territory 1.2.1.1.2");
@@ -786,42 +854,20 @@ class Trial {
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
                                     $this->display("Territory 1.2.1.1.2.1");
-                                    if ($details[$i]->getConti() == true) {
 
-                                        $this->display("Territory 1.2.1.1.2.1.1");
-                                        $row = $this->setFullRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, $endTime));
-                                        array_push($end, $row);
+                                    $row = $this->setFullRowTravelling($details, $i, 0);
+                                    $add+= $this->getHours($ref, $endTime);
+                                    $row->setDays($this->getDiv($add));
+                                    array_push($end, $row);
 
-                                    }
-                                    else {
-
-                                        $this->display("Territory 1.2.1.1.2.1.2");
-                                        $row = $this->setFullRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($startTime, $endTime));
-                                        array_push($end, $row);
-
-                                    }
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
                                     $this->display("Territory 1.2.1.1.2.2");
                                     $row = $this->setHalfRowTravelling($details, $i, 0);
-
-                                    if ($details[$i]->getConti() == true) {
-
-                                        $this->display("Territory 1.2.1.1.2.2.1");
-                                        $row->setDays(1);
-                                        array_push($end, $row);
-
-                                    }
-                                    else {
-
-                                        $this->display("Territory 1.2.1.1.2.2.2");
-                                        $row->setDays($this->getRate($ref, "24:00"));
-                                        array_push($end, $row);
-
-                                    }
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDiv($add));
+                                    array_push($end, $row);
 
                                     $end = $this->setMidTravel($details, $i, $end);
 
@@ -836,14 +882,15 @@ class Trial {
                         else {      //  If previous is stay.
 
                             $this->display("Territory 1.2.1.2");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
 
                                 $this->display("Territory 1.2.1.2.1");
                                 if ($startDate == $endDate) {       //  ([x-a][a-a])
 
                                     $this->display("Territory 1.2.1.2.1.1");
                                     $row = $this->setFullRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($ref, $endTime));
+                                    $add+= $this->getHours($ref, $endTime);
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
@@ -851,7 +898,8 @@ class Trial {
 
                                     $this->display("Territory 1.2.1.2.1.2");
                                     $row = $this->setHalfRowTravelling($details, $i, 0);
-                                    $row->setDays($this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                     $end = $this->setMidTravel($details, $i, $end);
@@ -863,86 +911,82 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
                                 $this->display("Territory 1.2.1.2.2");
-                                $row = $this->setHalfRowTravelling($details, $i, 0);
 
-                                if ($details[$i]->getConti() == true) {
+                                if ($startDate == $endDate) {       //  ([x-a][b-b])
 
-                                    $row->setDays(1);
-                                    array_push($end, $row);
-
-
-                                }
-                                elseif ($details[$i]->getConti() == false) {
-
-                                    $row->setDays($this->getRate($startTime, "24:00"));
+                                    $this->display("Territory 1.2.1.2.1.1");
+                                    $row = $this->setFullRowTravelling($details, $i, 0);
+                                    $add+= $this->getHours($ref, $endTime);
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
+                                elseif ($startDate != $endDate) {       //  ([x-a][b-c])
 
-                                $end = $this->setMidTravel($details, $i, $end);
+                                    $this->display("Territory 1.2.1.2.1.2");
+                                    $row = $this->setHalfRowTravelling($details, $i, 0);
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $this->display("Hours is ".$add);
+                                    $row->setDays($this->getDiv($add));
+                                    array_push($end, $row);
 
-                                $row = $this->setHalfRowTravelling($details, $i, 1);
-                                $row->setDays($this->getRate("00:00", $endTime));
-                                array_push($end, $row);
+                                    $end = $this->setMidTravel($details, $i, $end);
+
+                                    $row = $this->setHalfRowTravelling($details, $i, 1);
+                                    $row->setDays($this->getRate("00:00", $endTime));
+                                    array_push($end, $row);
+
+                                }
 
                             }
 
                         }
                     }
-                    else {
+                    else {  //  Not the first aor last row.
 
                         $this->display("Territory 1.2.2");
-                        if ($this->isTravel($details[$i-1]) && $this->isTravel($details[$i+1])) {       //  Case 1
+                        if ($this->isTravel($prev) && $this->isTravel($next)) {       //  Case 1
 
                             $this->display("Territory 1.2.2.1");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) { //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) { //  ([x-a][a-y])
 
                                 //  Continuous.
                                 $this->display("Territory 1.2.2.1.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
                                     $this->display("Territory 1.2.2.1.1.1");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {   //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {   //  ([x-a][a-a][a-y])
 
                                         $this->display("Territory 1.2.2.1.1.1.1");
-                                        if ($details[$i]->getStartDate() == $details[$i + 1]->getEndDate()) { //  ([x-a][a-a][a-a])
 
-                                            $this->display("Territory 1.2.2.1.1.1.1.1");
+                                        if ($endTime == $nextStartTime) {
+
+                                            $this->dasp("tgtgt");
                                             $row = $this->setFullRowTravelling($details, $i, 0);
+                                            $add+= $this->getHours($ref, $endTime);
+                                            $ref = $nextStartTime;
                                             array_push($end, $row);
-                                            if ($details[$i-1]->getStartDate() == $details[$i]->getStartDate()) {
-
-                                                $this->display("Territory 1.2.2.1.1.1.1.1.1");
-                                                $ref = $ref;
-
-                                            }
-                                            else {
-
-                                                $this->display("Territory 1.2.2.1.1.1.1.1.2");
-                                                $ref = $ref;
-
-                                            }
 
                                         }
-                                        elseif ($details[$i]->getStartDate() != $details[$i + 1]->getEndDate()) { //  ([x-a][a-a][a-b])
+                                        else {
 
-                                            $this->display("Territory 1.2.2.1.1.1.1.2");
+                                            $this->dasp("lololo");
                                             $row = $this->setFullRowTravelling($details, $i, 0);
+                                            $add+= $this->getHours($ref, $endTime);
                                             array_push($end, $row);
-                                            if ($details[$i-1]->getStartDate() == $details[$i]->getStartDate()) {
+                                            if ($next->getConti() == true) {
 
-                                                $this->display("Territory 1.2.2.1.1.1.1.2.1");
-                                                $ref = $ref;
+                                                $add+= $this->getHours($endTime, $nextStartTime);
+                                                $ref = $nextStartTime;
 
                                             }
                                             else {
 
-                                                $this->display("Territory 1.2.2.1.1.1.1.2.2");
-                                                $ref = $ref;
+                                                $ref = $nextStartTime;
 
                                             }
 
@@ -954,59 +998,69 @@ class Trial {
                                         //  Not continuous journey.
                                         $this->display("Territory 1.2.2.1.1.1.2");
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
+                                        if ($next->getConti() == true) {
 
-                                        if ($details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($ref, "24:00"));
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $end = $this->setContiRows($details, $i, $end);
+                                            $add = 0;
                                             $ref = "00:00";
+                                            $add+= $this->getHours($ref, $nextStartTime);
+                                            $ref = $nextStartTime;
 
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate($ref, $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $ref = $nextStartTime;
 
                                         }
-
                                     }
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
 
                                     $this->display("Territory 1.2.2.1.1.2");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
                                         $this->display("Territory 1.2.2.1.1.2.1");
-                                        if ($details[$i]->getEndDate() == $details[$i+1]->getEndDate()) {     //  ([x-a][a-b][b-b])
 
-                                            $this->display("Territory 1.2.2.1.1.2.1.1");
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($ref, "24:00"));
-                                            array_push($end, $row);
+                                        $row = $this->setHalfRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        $add = 0;
+                                        array_push($end, $row);
 
-                                            $end = $this->setMidTravel($details, $i, $end);
+                                        $end = $this->setMidTravel($details, $i, $end);
 
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $ref = "00:00";
-                                            array_push($end, $row);
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        array_push($end, $row);
+
+                                        if ($endTime = $nextStartTime) {
+
+                                            $add+= $this->getHours("00:00", $endTime);
+                                            $ref = $nextStartTime;
 
                                         }
-                                        elseif($details[$i]->getEndDate() != $details[$i+1]->getEndDate()) {      //  ([x-a][a-b][b-c])
+                                        else {
 
-                                            $this->display("Territory 1.2.2.1.1.2.1.2");
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($ref, "24:00"));
-                                            array_push($end, $row);
+                                            $add+= $this->getHours("00:00", $endTime);
+                                            if ($next->getConti() == true) {
 
-                                            $end = $this->setMidTravel($details, $i, $end);
+                                                $add+= $this->getHours($endTime, $nextStartTime);
+                                                $ref = $nextStartTime;
 
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $ref = "00:00";
-                                            array_push($end, $row);
+                                            }
+                                            else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
 
                                         }
 
@@ -1015,26 +1069,34 @@ class Trial {
 
                                         //  Not continuous journey.
                                         $this->display("Territory 1.2.2.1.1.2.2");
+
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        $add = 0;
                                         array_push($end, $row);
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        $add+= $this->getHours("00:00", $endTime);
 
-                                            $row->setDays(1);
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
+                                            $add = $this->getHours("00:00", $nextStartTime);
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate("00:00", $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
 
@@ -1049,56 +1111,57 @@ class Trial {
                                 $this->display("Territory 1.2.2.1.2");
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {   //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {   //  ([x-a][b-b][b-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        array_push($end, $row);
 
-                                        if ($details[$i]->getConti() == true) {
+                                        if ($endTime == $nextStartTime) {
 
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $startTime;
+                                            if ($next->getConti() == true) {
+
+                                                $add+= $this->getHours($endTime, $nextStartTime);
+                                                $ref = $nextStartTime;
+
+                                            }
+                                            else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
 
                                         }
-
-                                        array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) { //  ([x-a][b-b][c-y])
+                                    elseif ($endDate != $nextStartDate) { //  ([x-a][b-b][c-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
 
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
-                                            $row->setDays(1);
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-                                            $ref = "00:00";
+
                                             $end = $this->setContiRows($details, $i, $end);
 
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($ref, $endTime));
-                                            $ref = $details[$i+1]->getDepTime();
-                                            array_push($end, $row);
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
+                                        else {
 
-                                            $row->setDays($this->getRate($startTime, $endTime));
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -1107,89 +1170,73 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {   //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {   //  ([x-a][b-c][c-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                        }
-                                        else {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                        }
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
                                         array_push($end, $row);
-                                        $ref = "00:00";
+                                        $add+= $this->getHours("00:00", $endTime);
+
+                                        if ($endTime == $nextStartTime) {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+                                        else {
+
+                                            if ($next->getConti() == true) {
+
+                                                $add+= $this->getHours($endTime, $nextStartTime);
+                                                $ref = $nextStartTime;
+
+
+                                            } else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
+
+                                        }
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) { //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) { //  ([x-a][b-c][d-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $add = 0;
 
-                                            $row->setDays(1);
+                                        $end = $this->setMidTravel($details, $i, $end);
+
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours("00:00", $endTime);
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $ref = "00:00";
 
                                             $end = $this->setContiRows($details, $i, $end);
 
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
+                                        else {
 
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($startTime, "24:00"));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $ref);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -1200,55 +1247,49 @@ class Trial {
                             }
 
                         }
-                        elseif ($this->isTravel($details[$i-1]) && !$this->isTravel($details[$i+1])) {      //  Case 2  [T-T-S]
+                        elseif ($this->isTravel($prev) && !$this->isTravel($next)) {      //  Case 2  [T-T-S]
 
                             $this->display("Territory 1.2.2.2");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y][p-z])
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y][p-z])
 
                                 $this->display("Territory 1.2.2.2.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a][y-z])
 
                                     $this->display("Territory 1.2.2.2.1.1");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
 
                                         $this->display("Territory 1.2.2.2.1.1.1");
-                                        if ($details[$i]->getEndDate() == $details[$i+1]->getEndDate()) {   //  ([x-a][a-a][a-a])
 
-                                            $this->display("Territory 1.2.2.2.1.1.1.1");
-                                            $row = $this->setFullRowTravelling($details, $i, 0);
-                                            array_push($end, $row);
-
-                                        }
-                                        elseif ($details[$i]->getEndDate() != $details[$i+1]->getEndDate()) {   //  ([x-a][a-a][a-b])
-
-                                            $this->display("Territory 1.2.2.2.1.1.1.2");
-                                            $row = $this->setFullRowTravelling($details, $i, 0);
-                                            array_push($end, $row);
-
-                                        }
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        array_push($end, $row);
+                                        $ref = $endTime;
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous.
                                         $this->display("Territory 1.2.2.2.1.1.2");
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
 
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
-                                            $row->setDays($this->getRate($ref, "24:00"));
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $end = $this->setContiRows($details, $i, $end);
-
-
+                                            $ref = "00:00";
+                                            $add = 0;
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate($ref, $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
+                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
-                                        $ref = "00:00";
 
                                     }
 
@@ -1256,108 +1297,103 @@ class Trial {
                                 elseif ($startDate != $endDate) {       //  ([x-a][a-b][y-z])
 
                                     $this->display("Territory 1.2.2.2.1.2");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-z])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-z])
 
                                         $this->display("Territory 1.2.2.2.1.2.1");
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details,$i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-z])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-z])
 
                                         //  Not continuous travel.
                                         $this->display("Territory 1.2.2.2.1.2.2");
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        $add+= $this->getHours($ref, $endTime);
 
-                                            $row->setDays(1);
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $end = $this->setContiRows($details, $i, $end);
+                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate("00:00", $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
+                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
-                                        $ref = "00:00";
 
                                     }
 
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not Continuous.
                                 $this->display("Territory 1.2.2.2.2");
 
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {   //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {   //  ([x-a][b-b][b-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        array_push($end, $row);
+                                        $ref = $endTime;
 
-                                        if ($details[$i]->getConti() == true) {
+                                    }
+                                    elseif ($endDate != $nextStartDate) { //  ([x-a][b-b][c-y])
 
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
+                                            array_push($end, $row);
+
+                                            $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
-                                            $ref = $startTime;
-
-                                        }
-
-                                        array_push($end, $row);
-
-                                    }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) { //  ([x-a][b-b][c-y])
-
-                                        $row = $this->setFullRowTravelling($details, $i, 0);
-
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
-                                            $end = $this->setContiRows($details, $i, $end);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($ref, $endTime));
-                                            $ref = "00:00";
-                                            array_push($end, $row);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($startTime, $endTime));
-                                            $ref = "00:00";
-                                            array_push($end, $row);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -1366,90 +1402,54 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
                                     $this->display("lklkl");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {   //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {   //  ([x-a][b-c][c-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                        }
-                                        else {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                        }
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
                                         array_push($end, $row);
-                                        $ref = "00:00";
+                                        $ref = $endTime;
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) { //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) { //  ([x-a][b-c][d-y])
+
                                         $this->display("lllll");
+
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
-                                            $row->setDays(1);
+                                        $end = $this->setMidTravel($details, $i, $end);
+
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $ref = "00:00";
+                                            $add = 0;
 
                                             $end = $this->setContiRows($details, $i, $end);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $this->display("jajajajaj");
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
                                             $ref = "00:00";
 
                                         }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
+                                        else {
 
-                                            $this->display("kkkkk");
-                                            $row = $this->setHalfRowTravelling($details, $i, 0);
-                                            $row->setDays($this->getRate($startTime, "24:00"));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
+                                            $add = 0;
                                             $ref = "00:00";
 
                                         }
@@ -1461,36 +1461,43 @@ class Trial {
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i-1]) && !$this->isTravel($details[$i+1])) {     //  Case 3  [S-T-S]
+                        elseif (!$this->isTravel($prev) && !$this->isTravel($next)) {     //  Case 3  [S-T-S]
 
                             $this->display("Territory 1.2.2.3");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y]
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y]
 
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
                                         array_push($end, $row);
+                                        $ref = $endTime;
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setFullRowTravelling($details, $i, 0);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        $add+= $this->getHours($ref, $endTime);
 
-                                            $row->setDays($this->getRate($ref, "24:00"));
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
                                             $end = $this->setContiRows($details, $i, $end);
+                                            $add = 0;
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate($ref, $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -1499,44 +1506,53 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
 
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
-                                            $row->setDays(1);
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate("00:00", $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -1545,60 +1561,43 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-b][b-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
                                         array_push($end, $row);
-                                        if ($details[$i]->getConti() == true) {
 
+                                    }
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
+
+                                        //  Not continuous. Check again.
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
+                                            array_push($end, $row);
+
+                                            $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
-                                            $ref = $startTime;
-
-                                        }
-
-                                    }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
-
-                                        //  Not continuous. Check again.
-                                        $row = $this->setFullRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
-                                            $end = $this->setContiRows($details, $i, $end);
-
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($startTime, $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -1607,88 +1606,53 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        if ($details[$i]->getConti() == true) {
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $add = 0;
+                                        $ref = "00:00";
+                                        $end = $this->setMidTravel($details, $i, $end);
 
-                                            $row->setDays(1);
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        array_push($end, $row);
+                                        $ref = $endTime;
+
+
+                                    }
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
+
+                                        //  Not continuous. Check again.
+                                        $row = $this->setHalfRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $add = 0;
+                                        $ref = "00:00";
+                                        $end = $this->setMidTravel($details, $i, $end);
+
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($endTime, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
+                                            $ref = "00:00";
+                                            $add = 0;
+                                            $end = $this->setContiRows($details, $i, $end);
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                        }
-
-                                        $end = $this->setMidTravel($details, $i, $end);
-
-                                        $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        $ref = "00:00";
-                                        array_push($end, $row);
-
-                                    }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
-
-                                        //  Not continuous. Check again.
-                                        $row = $this->setHalfRowTravelling($details, $i, 0);
-
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -1699,37 +1663,63 @@ class Trial {
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i-1]) && $this->isTravel($details[$i+1])) {       //  Case 4     [S-T-T]
+                        elseif (!$this->isTravel($prev) && $this->isTravel($next)) {       //  Case 4     [S-T-T]
 
                             $this->display("Territory 1.2.2.4");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
 
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add += $this->getHours($ref, $endTime);
                                         array_push($end, $row);
+                                        $ref = $endTime;
 
+                                        if ($endTime == $nextStartTime) {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+                                        else {
+                                            if ($next->getConti() == true) {
+
+                                                $add += $this->getHours($ref, $nextStartTime);
+                                                $ref = $nextStartTime;
+
+                                            } else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
+                                        }
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous.
-                                        $row = $this->setFullRowTravelling($details, $i);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add += $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
+                                        if ($next->getConti() == true) {
 
-                                            $row->setDays($this->getRate($ref, "24:00"));
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
 
                                             $end = $this->setContiRows($details, $i, $end);
+
                                             $ref = "00:00";
+                                            $add = $this->getHours($ref, $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate($ref, $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
                                     }
@@ -1737,44 +1727,76 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
-                                        $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add += $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
-                                        $ref = "00:00";
+                                        $add += $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
                                         array_push($end, $row);
+
+                                        if ($endTime == $nextStartTime) {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+                                        else {
+                                            if ($next->getConti() == true) {
+
+                                                $add += $this->getHours($ref, $nextStartTime);
+                                                $ref = $nextStartDate;
+
+                                            } else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
+                                        }
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous.
-                                        $row = $this->setHalfRowTravelling($details, $i, 0);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add += $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
+
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add += $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
 
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
-                                            $row->setDays(1);
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = $this->getHours($ref, $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $row->setDays($this->getRate("00:00", $endTime));
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
 
@@ -1783,151 +1805,131 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous.
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-b][b-y])
 
                                         $row = $this->setFullRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
                                         array_push($end, $row);
-                                        if ($details[$i]->getConti() == true) {
 
+                                        if ($endTime == $nextStartTime) {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+                                        else {
+                                            if ($next->getConti() == true) {
+
+                                                $add += $this->getHours($ref, $nextStartTime);
+                                                $ref = $nextStartTime;
+
+                                            } else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
+                                        }
+
+                                    }
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
+
+                                        //  Not continuous.
+                                        $row = $this->setFullRowTravelling($details, $i);
+                                        $add+= $this->getHours($ref, $endTime);
+                                        $ref = $endTime;
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             $ref = "00:00";
+                                            $add = $this->getHours($ref, $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $startTime;
+                                            $add = 0;
+                                            $ref = $nextStartTime;
 
                                         }
 
-                                    }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
-
-                                        //  Not continuous.
-                                        $row = $this->setFullRowTravelling($details, $i);
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($startTime, $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
-
-                                        }
                                     }
 
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
-
-                                        if ($details[$i]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
-
-                                        }
-                                        else {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                        }
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                         $end = $this->setMidTravel($details, $i, $end);
 
                                         $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
                                         array_push($end, $row);
-                                        $ref = "00:00";
 
+                                        if ($endTime == $nextStartTime) {
+
+                                            $ref = $nextStartTime;
+
+                                        }
+                                        else {
+                                            if ($next->getConti() == true) {
+
+                                                $add += $this->getHours($ref, $nextStartTime);
+                                                $ref = $nextStartTime;
+
+                                            } else {
+
+                                                $ref = $nextStartTime;
+
+                                            }
+                                        }
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
 
                                         //  Not continuous.
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
+                                        $end = $this->setMidTravel($details, $i, $end);
 
-                                            $row->setDays(1);
+                                        $row = $this->setHalfRowTravelling($details, $i, 1);
+                                        $add+= $this->getHours($ref, $endTime);
+
+                                        if ($next->getConti() == true) {
+
+                                            $add+= $this->getHours($ref, "24:00");
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
-                                        elseif ($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
+                                        else {
 
-                                            $row->setDays(1);
+                                            $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $end);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $row);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays($this->getRate("00:00", $endTime));
-                                            array_push($end, $row);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getRate($startTime, "24:00"));
-                                            array_push($end, $row);
-
-                                            $end = $this->setMidTravel($details, $i, $row);
-
-                                            $row = $this->setHalfRowTravelling($details, $i, 1);
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
 
@@ -1961,34 +1963,36 @@ class Trial {
                     else {
 
                         $this->display("Territory 2.1.2");
-                        if ($this->isTravel($details[$i+1])) {  //  If next is a travel entry.  [S-T]
+                        if ($this->isTravel($next)) {  //  If next is a travel entry.  [S-T]
 
                             $this->display("Territory 2.1.2.1");
                             if ($startDate == $endDate) {   //  ([a-a][x-y])
 
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-a][a-y])
+                                if ($endDate == $nextStartDate) {     //  ([a-a][a-y])
 
                                     $row = $this->setStay($details, $i);
-                                    $ref = "00:00";
+                                    $add += $this->getHours("00:00", $nextStartTime);
+                                    $ref = $nextStartTime;
                                     array_push($end, $row);
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-a][b-y])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-a][b-y])
 
                                     //  Not continuous. Check again.
                                     $row = $this->setStay($details, $i);
                                     $row->setDays($this->getDay($startDate, $endDate));
                                     array_push($end, $row);
 
-                                    if ($details[$i+1]->getConti() == true) {
+                                    if ($next->getConti() == true) {
 
                                         $end = $this->setContiRows($details, $i, $end);
-                                        $ref = "00:00";
+                                        $ref = $nextStartTime;
+                                        $add += $this->getHours("00:00", $nextStartTime);
 
                                     }
                                     else {
 
-                                        $ref = $details[$i+1]->getDepTime();
+                                        $ref = $nextStartTime;
 
                                     }
 
@@ -1997,30 +2001,36 @@ class Trial {
                             }
                             elseif ($startDate != $endDate) {   //  ([a-b][x-y])
 
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-b][b-y])
+                                if ($endDate == $nextStartDate) {     //  ([a-b][b-y])
 
                                     $this->display("jiji");
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-                                    $ref = "00:00";
+                                    $add+= $this->getDay($startDate, $this->subDate($endDate));
+                                    $row->setDays($add);
                                     array_push($end, $row);
+                                    $add = 0;
+                                    $add+= $this->getHours("00:00", $nextStartTime);
+                                    $ref = $nextStartTime;
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-b][c-y])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-b][c-y])
 
                                     //  Not continuous. Check again.
                                     $this->display("hoio");
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getDay($startDate, $endDate));
+                                    $add += $this->getDay($startDate, $endDate);
+                                    $row->setDays($add);
                                     array_push($end, $row);
-                                    if ($details[$i+1]->getConti() == true) {
+                                    $add = 0;
+                                    if ($next->getConti() == true) {
 
                                         $end = $this->setContiRows($details, $i, $end);
-                                        $ref = "00:00";
+                                        $add += $this->getHours("00:00", $nextStartTime);
+                                        $ref = $nextStartTime;
                                     }
                                     else {
 
-                                        $ref = $details[$i+1]->getDepTime();
+                                        $ref = $nextStartTime;
 
                                     }
 
@@ -2029,13 +2039,13 @@ class Trial {
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i+1])) { //  If next is a stay entry.
+                        elseif (!$this->isTravel($next)) { //  If next is a stay entry.
 
                             $this->display("Territory 2.1.2.2");
                             if ($startDate == $endDate) {   //  ([a-a])
 
                                 $this->display("Territory 2.1.2.2.1");
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-a][a-x])
+                                if ($endDate == $nextStartDate) {     //  ([a-a][a-x])
 
                                     $this->display("Territory 2.1.2.2.1.1");
                                     $row = $this->setStay($details, $i);
@@ -2043,33 +2053,25 @@ class Trial {
                                     array_push($end, $row);
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-a][b-x])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-a][b-x])
 
                                     //  Not continuous. Check again.
                                     $this->display("Territory 2.1.2.2.1.2");
-                                    if ($this->getDay($details[$i]->getEndDate(), $details[$i+1]->getStartDate()) == 2) {
+                                    $row = $this->setStay($details, $i);
+                                    $add+= 24;
+                                    $row->setDays($this->getDiv($add));
+                                    array_push($end, $row);
+                                    $add = 0;
 
-                                        $this->display("Territory 2.1.2.2.1.2.1");
-                                        $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $endDate));
-                                        array_push($end, $row);
+                                    if ($next->getConti() == true) {
+
+                                        $end = $this->setContiRows($details, $i, $end);
+                                        $ref = "00:00";
 
                                     }
                                     else {
 
-                                        //  Not continuous. Check again.
-                                        $this->display("Territory 2.1.2.2.1.2.2");
-                                        if ($details[$i+1]->getConti() == true) {
-
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
-
-                                        }
-                                        else {
-
-                                            $ref = "00:00";
-
-                                        }
+                                        $ref = "00:00";
 
                                     }
 
@@ -2079,23 +2081,27 @@ class Trial {
                             elseif ($startDate != $endDate) {   //  ([a-b])
 
                                 $this->display("Territory 2.1.2.2.2");
-                                if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([a-b][b-y])
+                                if ($endDate == $nextStartDate) {     //  ([a-b][b-y])
 
                                     $this->display("Territory 2.1.2.2.2.1");
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-                                    $ref = "00:00";
+                                    $add+= $this->getDay($startDate, $this->subDate($endDate));
+                                    $row->setDays($add);
                                     array_push($end, $row);
+                                    $ref = "00:00";
+                                    $add = 0;
 
                                 }
-                                elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([a-b][c-y])
+                                elseif ($endDate != $nextStartDate) {     //  ([a-b][c-y])
 
                                     //  Not continuous. Check again.
                                     $this->display("Territory 2.1.2.2.2.2");
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getDay($startDate, $endDate));
+                                    $add+= $this->getDay($startDate, $endDate);
+                                    $row->setDays($add);
                                     array_push($end, $row);
-                                    if ($details[$i+1]->getConti() == true) {
+                                    $add = 0;
+                                    if ($next->getConti() == true) {
 
                                         $end = $this->setContiRows($details, $i, $end);
                                         $ref = "00:00";
@@ -2124,17 +2130,18 @@ class Trial {
                     if ($i == ($count-1)) { //  If last entry.
 
                         $this->display("Territory 2.2.1");
-                        if ($this->isTravel($details[$i-1])) {
+                        if ($this->isTravel($prev)) {
 
                             $this->display("Territory 2.2.1.1");
-                            if($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {      //  ([x-a][a-y])
+                            if($prevEndDate == $endDate) {      //  ([x-a][a-y])
 
                                 $this->display("Territory 2.2.1.1.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
                                     $this->display("Territory 2.2.1.1.1.1");
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
@@ -2142,69 +2149,57 @@ class Trial {
 
                                     $this->display("Territory 2.2.1.1.1.2");
                                     $row = $this->setStay($details, $i);
-
-                                    $row->setDays($this->getDay($startDate, $endDate)-1+$this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDay($this->addDate($startDate), $endDate)+$this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous.
                                 $this->display("Territory 2.2.1.1.2");
                                 $row = $this->setStay($details, $i);
-                                $row->setDays($this->getDay($startDate, $endDate));
+                                $add+= $this->getDay($startDate, $endDate);
+                                $row->setDays($add);
                                 array_push($end, $row);
 
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i-1])) {
+                        elseif (!$this->isTravel($prev)) {
 
                             $this->display("Territory 2.2.1.2");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) { //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) { //  ([x-a][a-y])
 
                                 $this->display("Territory 2.2.1.2.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
-
                                     $row = $this->setStay($details, $i);
-                                    $this->display("Ref ".$ref);
-                                    $row->setDays($this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
                                 elseif ($startDate != $endDate) {       //  ([x-a][a-b])
 
                                     $row = $this->setStay($details, $i);
-                                    $row->setDays($this->getDay($this->addDate($startDate), $endDate)+ $this->getRate($ref, "24:00"));
+                                    $add+= $this->getHours($ref, "24:00");
+                                    $row->setDays($this->getDay($this->addDate($startDate), $endDate)+ $this->getDiv($add));
                                     array_push($end, $row);
 
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
                                 $this->display("Territory 2.2.1.2.2");
                                 $row = $this->setStay($details, $i);
-                                $row->setDays($this->getDay($startDate, $endDate));
-                                $this->dasp($row);
-                                $this->dasp($end);
+                                $add+= $this->getDay($startDate, $endDate);
+                                $row->setDays($add);
                                 array_push($end, $row);
-
-//                                if ($details[$i+1]->getConti() == true) {
-//
-//                                    $end = $this->setContiRows($details, $i, $end);
-//                                    $ref = "00:00";
-//
-//                                }
-//                                else {
-//
-//                                    $ref = "00:00";
-//
-//                                }
 
                             }
 
@@ -2215,34 +2210,42 @@ class Trial {
 
                         $this->display("Territory 2.2.2");
 
-                        if ($this->isTravel($details[$i-1]) && $this->isTravel($details[$i+1])) {   //  Case 5  [T-S-T]
-
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
-
+                        if ($this->isTravel($prev) && $this->isTravel($next)) {   //  Case 5  [T-S-T]
+                            $this->display("Territory 2.2.2.1");
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
+                                $this->display("Territory 2.2.2.1.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
-
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
-
+                                    $this->display("Territory 2.2.2.1.1.1");
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
+                                        $this->display("Territory 2.2.2.1.1.1.1");
                                         $row = $this->setStay($details, $i);
-//                                        $this->display("Ref ".$ref);
+                                        $add+= $this->getHours($ref, $nextStartTime);
+                                        $this->display("Add = ".$add);
+                                        $ref = $nextStartTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous. Check again.
+                                        $this->display("Territory 2.2.2.1.1.1.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        $add = 0;
+                                        if ($next->getConti() == true) {
 
+                                            $this->display("Territory 2.2.2.1.1.1.2.1");
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add+= $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $this->display("Territory 2.2.2.1.1.1.2.2");
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -2251,30 +2254,38 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    $this->display("Territory 2.2.2.1.1.2");
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
+                                        $this->display("Territory 2.2.2.1.1.2.1");
                                         $row = $this->setStay($details, $i);
-//                                        $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getRate($ref, "24:00"));
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getDiv($add));
+                                        $add = $this->getHours("00:00", $nextStartTime);
+                                        $ref = $nextStartTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous. Check again.
+                                        $this->display("Territory 2.2.2.1.1.2.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00")+$this->getDay($this->addDate($startDate), $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
+                                            $this->display("Territory 2.2.2.1.1.2.2.1");
+                                            $add = $this->getHours("00:00", $nextStartTime);
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $this->display("Territory 2.2.2.1.1.2.2.2");
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -2282,33 +2293,42 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getStartDate() != $details[$i]->getEndDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
+                                $this->display("Territory 2.2.2.1.2");
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
+                                    $this->display("Territory 2.2.2.1.2.1");
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-b][b-y])
 
+                                        $this->display("Territory 2.2.2.1.2.1.1");
                                         $row = $this->setStay($details, $i);
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, $nextStartTime);
+                                        $ref = $nextStartTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
 
                                         //  Not continuous. Check again.
+                                        $this->display("Territory 2.2.2.1.2.1.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays(1);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
+                                            $this->display("Territory 2.2.2.1.2.1.2.1");
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $this->display("Territory 2.2.2.1.2.1.2.2");
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -2317,30 +2337,41 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    $this->display("Territory 2.2.2.1.2.2");
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
+                                        $this->display("Territory 2.2.2.1.2.2.1");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-//                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getRate($ref, "24:00"));
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getDiv($add));
+                                        $add = $this->getHours("00:00", $nextStartTime);
+                                        $ref = $nextStartTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
 
                                         //  Not continuous. Check again.
+                                        $this->display("Territory 2.2.2.1.2.2.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00")+$this->getDay($this->addDate($startDate), $endDate));
+                                        $add += $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
+                                            $this->display("Territory 2.2.2.1.2.2.2.1");
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $this->display("Add is .".$add);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $this->display("Territory 2.2.2.1.2.2.2.2");
+                                            $ref = $nextStartTime;
+                                            $add = 0;
+                                            $this->display("Add is .".$add);
 
                                         }
 
@@ -2351,34 +2382,36 @@ class Trial {
                             }
 
                         }
-                        elseif ($this->isTravel($details[$i-1]) && !$this->isTravel($details[$i+1])) {  //  Case 6  [T-S-S]
+                        elseif ($this->isTravel($prev) && !$this->isTravel($next)) {  //  Case 6  [T-S-S]
 
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
 
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $this->display("Ref ".$ref);
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2387,29 +2420,34 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getDiv($add));
                                         $ref = "00:00";
+                                        $add = 0;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00")+$this->getDay($this->addDate($startDate), $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2418,34 +2456,35 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-b][b-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $this->display("Ref ".$ref);
                                         array_push($end, $row);
-                                        $ref = "00:00";
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays(1);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2454,29 +2493,34 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $this->subDate($endDate)));
                                         $ref = "00:00";
+                                        $add = 0;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
 
                                         //  Not continuous.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2487,39 +2531,42 @@ class Trial {
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i-1]) && !$this->isTravel($details[$i+1])) {     //  Case 7  [S-S-S]
+                        elseif (!$this->isTravel($prev) && !$this->isTravel($next)) {     //  Case 7  [S-S-S]
 
                             $this->display("Territory 2.2.2.3");
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
 
                                 $this->display("Territory 2.2.2.3.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
                                     $this->display("Territory 2.2.2.3.1.1");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //([x-a][a-a][a-y])
 
                                         $this->display("Territory 2.2.2.3.1.1.1");
                                         $row = $this->setStay($details, $i);
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous. Check again.
                                         $this->display("Territory 2.2.2.3.1.1.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
 
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                     }
@@ -2528,31 +2575,36 @@ class Trial {
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
                                     $this->display("Territory 2.2.2.3.1.2");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
                                         $this->display("Territory 2.2.2.3.1.2.1");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getDiv($add));
                                         $ref = "00:00";
+                                        $add = 0;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous. Check again.
                                         $this->display("Territory 2.2.2.3.1.2.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00")+$this->getDay($this->addDate($startDate), $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $row);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2561,7 +2613,7 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 //  Not continuous. Check again.
                                 $this->display("Territory 2.2.2.3.2");
@@ -2569,31 +2621,33 @@ class Trial {
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
                                     $this->display("Territory 2.2.2.3.1.1");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //([x-a][b-b][b-y])
 
                                         $this->display("Territory 2.2.2.3.1.1.1");
                                         $row = $this->setStay($details, $i);
                                         array_push($end, $row);
-                                        $ref = "00:00";
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
 
                                         //  Not continuous. Check again.
                                         $this->display("Territory 2.2.2.3.1.1.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays(1);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
 
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                     }
@@ -2602,31 +2656,36 @@ class Trial {
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
                                     $this->display("Territory 2.2.2.3.1.2");
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
                                         $this->display("Territory 2.2.2.3.1.2.1");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-                                        $ref = "00:00";
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $this->subDate($endDate)));
                                         array_push($end, $row);
+                                        $ref = "00:00";
+                                        $add = 0;
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
 
                                         //  Not continuous. Check again.
                                         $this->display("Territory 2.2.2.3.1.2.2");
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
                                         else {
 
                                             $ref = "00:00";
+                                            $add = 0;
 
                                         }
 
@@ -2634,131 +2693,41 @@ class Trial {
 
                                 }
 
-//                                if ($startDate == $endDate) {   //  ([x-a][b-b])
-//
-//                                    $this->display("Territory 2.2.2.3.2.1");
-//                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
-//
-//                                        $this->display("Territory 2.2.2.3.2.1.1");
-//                                        if ($this->getDay($details[$i-1]->getEndDate(), $details[$i]->getStartDate()) == 2) {
-//
-//                                            $this->display("Territory 2.2.2.3.2.1.1.1");
-////                                            $this->display("yoyoyoy");
-//                                            $row = $this->setStay($details, $i);
-////                                            $row->setDays($this->getDay($startDate, $endDate));
-//                                            $ref = "00:00";
-//                                            array_push($end, $row);
-//
-//
-//                                        }
-//                                        else {
-//
-//                                            $this->display("Territory 2.2.2.3.2.1.1.2");
-//                                            //  Not continuous. Check again.
-//
-//                                        }
-//
-//                                    }
-//                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
-//
-//                                        $this->display("Territory 2.2.2.3.2.1.2");
-//                                        if ($this->getDay($details[$i-1]->getEndDate(), $details[$i]->getStartDate()) == 2) {
-//
-//                                            $this->display("Territory 2.2.2.3.2.1.2.1");
-////                                            $this->display("yoyoyoy");
-//                                            $row = $this->setStay($details, $i);
-//                                            $row->setDays($this->getDay($startDate, $endDate));
-//                                            array_push($end, $row);
-//
-//
-//                                        }
-//                                        else {
-//
-//                                            $this->display("Territory 2.2.2.3.2.1.2.2");
-//                                            //  Not continuous. Check again.
-//
-//                                        }
-//
-//                                    }
-//
-//                                }
-//                                elseif ($startDate != $endDate) {   //  ([x-a][b-c])
-//
-//                                    $this->display("Territory 2.2.2.3.2.2");
-//                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
-//
-//                                        $this->display("Territory 2.2.2.3.2.2.1");
-//                                        if ($this->getDay($details[$i-1]->getEndDate(), $details[$i]->getStartDate()) == 2) {
-//
-//                                            $this->display("Territory 2.2.2.3.2.2.1.1");
-////                                            $this->display("yoyoyoy");
-//                                            $row = $this->setStay($details, $i);
-//                                            $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
-//                                            $ref = "00:00";
-//                                            array_push($end, $row);
-//
-//
-//                                        }
-//                                        else {
-//
-//                                            $this->display("Territory 2.2.2.3.2.2.1.2");
-//                                            //  Not continuous. Check again.
-//
-//                                        }
-//
-//                                    }
-//                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
-//
-//                                        $this->display("Territory 2.2.2.3.2.2.2");
-//                                        if ($this->getDay($details[$i-1]->getEndDate(), $details[$i]->getStartDate()) == 2) {
-//
-//                                            $this->display("Territory 2.2.2.3.2.2.2.1");
-////                                            $this->display("yoyoyoy");
-//                                            $row = $this->setStay($details, $i);
-//                                            $row->setDays($this->getDay($startDate, $endDate));
-//                                            array_push($end, $row);
-//
-//                                        }
-//                                        else {
-//
-//                                            $this->display("Territory 2.2.2.3.2.2.2.2");
-//                                            //  Not continuous. Check again.
-//
-//                                        }
-//
-//                                    }
-//                                }
-
                             }
 
                         }
-                        elseif (!$this->isTravel($details[$i-1]) && $this->isTravel($details[$i+1])) {      //  Case 8  [S-S-T]
-
-                            if ($details[$i-1]->getEndDate() == $details[$i]->getStartDate()) {     //  ([x-a][a-y])
+                        elseif (!$this->isTravel($prev) && $this->isTravel($next)) {      //  Case 8  [S-S-T]
+                            $this->display("gugugu");
+                            if ($prevEndDate == $startDate) {     //  ([x-a][a-y])
 
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][a-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-a][a-y])
 
                                         $row = $this->setStay($details, $i);
+                                        $add+= $this->getHours($ref, $nextStartTime);
+                                        $ref = $nextStartTime;
                                         array_push($end, $row);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-a][b-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-a][b-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
 
@@ -2767,28 +2736,34 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][a-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][a-b][b-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate)) + $this->getRate($ref, "24:00"));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate)) + $this->getDiv($add));
                                         array_push($end, $row);
+                                        $add = $this->getHours("00:00", $nextStartTime);
+                                        $ref = $nextStartTime;
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][a-b][c-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][a-b][c-y])
 
                                         //  Not continuous. Check again.
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getRate($ref, "24:00")+$this->getDay($this->addDate($startDate), $endDate));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add)+$this->getDay($this->addDate($startDate), $endDate));
                                         array_push($end, $row);
-                                        if ($details[$i+1]->getConti() == true) {
+                                        if ($next->getConti() == true) {
 
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $ref = $nextStartTime;
+                                            $add = $this->getHours("00:00", $nextStartTime);
 
                                         }
                                         else {
 
-                                            $ref = $details[$i+1]->getDepTime();
+                                            $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
 
@@ -2797,59 +2772,37 @@ class Trial {
                                 }
 
                             }
-                            elseif ($details[$i-1]->getEndDate() != $details[$i]->getStartDate()) {     //  ([x-a][b-y])
+                            elseif ($prevEndDate != $startDate) {     //  ([x-a][b-y])
 
                                 if ($startDate == $endDate) {   //  ([x-a][b-b])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][b-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-b][b-y])
 
                                         $row = $this->setStay($details, $i);
                                         array_push($end, $row);
-                                        if ($details[$i]->getConti() == true) {
+                                        $add+= $this->getHours($ref, $nextStartTime);
+                                        $ref = $nextStartTime;
 
-                                            $ref = "00:00";
+                                    }
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-b][c-y])
+
+                                        //  Not continuous. Check again.
+                                        $row = $this->setStay($details, $i);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
+
+                                        if ($next->getConti() == true) {
+
+                                            $end = $this->setContiRows($details, $i, $end);
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
                                         else {
 
-                                            $ref = "00:00";
-
-                                        }
-
-                                    }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-b][c-y])
-
-                                        //  Not continuous. Check again.
-                                        $row = $this->setStay($details, $i);
-
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
-
-                                        }
-                                        elseif($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays(1);
-                                            array_push($end, $row);
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -2858,47 +2811,35 @@ class Trial {
                                 }
                                 elseif ($startDate != $endDate) {   //  ([x-a][b-c])
 
-                                    if ($details[$i]->getEndDate() == $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][c-y])
+                                    if ($endDate == $nextStartDate) {     //  ([x-a][b-c][c-y])
 
                                         $row = $this->setStay($details, $i);
-                                        $row->setDays($this->getDay($startDate, $this->subDate($endDate)));
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate), $this->subDate($endDate))+$this->getDiv($add));
                                         array_push($end, $row);
-                                        $ref = "00:00";
+                                        $ref = $nextStartTime;
+                                        $add = $this->getHours("00:00", $nextStartTime);
 
                                     }
-                                    elseif ($details[$i]->getEndDate() != $details[$i+1]->getStartDate()) {     //  ([x-a][b-c][d-y])
+                                    elseif ($endDate != $nextStartDate) {     //  ([x-a][b-c][d-y])
 
                                         //  Not continuous. Check again.
+                                        $this->display("gaagaag");
                                         $row = $this->setStay($details, $i);
+                                        $add+= $this->getHours($ref, "24:00");
+                                        $row->setDays($this->getDay($this->addDate($startDate),$endDate)+$this->getDiv($add));
+                                        array_push($end, $row);
+                                        if ($next->getConti() == true) {
 
-                                        if ($details[$i]->getConti() == true && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getDay($startDate, $endDate));
-                                            array_push($end, $row);
                                             $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = $this->getHours("00:00", $nextStartTime);
+                                            $ref = $nextStartTime;
 
                                         }
-                                        elseif($details[$i]->getConti() == true && $details[$i+1]->getConti() == false) {
+                                        else {
 
-                                            $row->setDays($this->getDay($startDate, $endDate));
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == false) {
-
-                                            $row->setDays($this->getDay($startDate, $endDate));
-                                            array_push($end, $row);
-                                            $ref = $details[$i+1]->getDepTime();
-
-                                        }
-                                        elseif ($details[$i]->getConti() == false && $details[$i+1]->getConti() == true) {
-
-                                            $row->setDays($this->getDay($startDate, $endDate));
-                                            array_push($end, $row);
-                                            $end = $this->setContiRows($details, $i, $end);
-                                            $ref = "00:00";
+                                            $add = 0;
+                                            $ref = $nextStartTime;
 
                                         }
 
@@ -2914,6 +2855,9 @@ class Trial {
                 }
 
             }
+
+            $this->dasp("Add = ".$add);
+            $this->dasp("Ref = ".$ref);
 
         }
 
