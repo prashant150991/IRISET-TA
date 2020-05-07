@@ -391,7 +391,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Source Station *</label>"
-                +"<input type = 'text'  class = 'fromStation form-control formData' value = 'SC' required = 'required' id = 'fromStation_"+count+"' name = 'fromStation_"+count+"' placeholder = 'Enter Source Station'>"
+                +"<input type = 'text'  class = 'fromStation form-control formData' value = '' required = 'required' id = 'fromStation_"+count+"' name = 'fromStation_"+count+"' placeholder = 'Enter Source Station'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -399,7 +399,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Destination Station *</label>"
-                +"<input type = 'text'  class = 'toStation form-control formData' required = 'required' value = 'HWH' id = 'toStation_"+count+"' name = 'toStation_"+count+"' placeholder = ' Destination Station'>"
+                +"<input type = 'text'  class = 'toStation form-control formData' required = 'required' value = '' id = 'toStation_"+count+"' name = 'toStation_"+count+"' placeholder = ' Destination Station'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -423,7 +423,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Train Number *</label>"
-                +"<input type = 'text'  class = 'train form-control formData' value = '12345' required = 'required' id = 'train_"+count+"' name = 'train_"+count+"' placeholder = 'Enter Train number'>"
+                +"<input type = 'text'  class = 'train form-control formData' value = '' required = 'required' id = 'train_"+count+"' name = 'train_"+count+"' placeholder = 'Enter Train number'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -431,7 +431,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Distance</label>"
-                +"<input type = 'text' class = 'distance form-control formData' value = '1600' id = 'distance_"+count+"' name = 'distance_"+count+"' placeholder = 'Enter Distance in KM'>"
+                +"<input type = 'text' class = 'distance form-control formData' value = '' id = 'distance_"+count+"' name = 'distance_"+count+"' placeholder = 'Enter Distance in KM'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -439,7 +439,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Objective of Journey *</label>"
-                +"<input type = 'text'  class = 'objective form-control formData' required = 'required' value = 'Travelling for Field Training' id = 'objective_"+count+"' name = 'objective_"+count+"' placeholder = 'Objective of the journey'>"
+                +"<input type = 'text'  class = 'objective form-control formData' required = 'required' value = '' id = 'objective_"+count+"' name = 'objective_"+count+"' placeholder = 'Objective of the journey'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -499,7 +499,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Objective of Stay *</label>"
-                +"<input type = 'text'  class = 'objective form-control formData' value = 'Stay for Field Training' id = 'objective_"+count+"' required = 'required' name = 'objective_"+count+"' placeholder = 'Objective of Stay'>"
+                +"<input type = 'text'  class = 'objective form-control formData' value = '' id = 'objective_"+count+"' required = 'required' name = 'objective_"+count+"' placeholder = 'Objective of Stay'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -542,7 +542,7 @@
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for="inputName">Name *</label>
-                        <input type='text' name = 'name' placeholder='Your Name' value = 'Prathamesh Kakade' class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name = 'name' placeholder='Your Name' value = '' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
@@ -554,7 +554,7 @@
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for='inputMonth'>Month *</label>
-                        <input type='text' name='month'  placeholder='TA Month' value = 'April, 2020' class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name='month'  placeholder='TA Month' value = '' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
