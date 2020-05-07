@@ -536,7 +536,7 @@
         </a>
     </div>
 
-    <form method='POST' target='_blank' action='trial6.php' onsubmit="return getCount()">
+    <form method='POST' target='_blank' action='trial.php' onsubmit="return getCount()">
         <div class= 'row'>
             <div class='form-row'>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
