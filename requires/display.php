@@ -44,6 +44,9 @@ class Display {
         $this->end = $end;
     }
 
+    /**
+     * Utility function to convert amount into words.
+     */
     public function getIndianCurrency($number)
     {
         $decimal = round($number - ($no = floor($number)), 2) * 100;
@@ -77,6 +80,9 @@ class Display {
         return ($Rupees ? $Rupees . 'Rupees ' : '') . $paise. "Only";
     }
 
+    /**
+     * Utility function to display the Officer name details.
+     */
     public function displayNameTable() {
 
         echo "<table class='t1'>";
@@ -108,6 +114,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the Officer pay details.
+     */
     public function displayPayTable() {
 
         echo "<table class='t2'>";
@@ -139,6 +148,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the Officer details.
+     */
     public function displayOfficerData() {
 
         $this->displayNameTable();
@@ -147,6 +159,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the travel details table head.
+     */
     public function displayTravelTableHead() {
 
 
@@ -206,6 +221,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display a travel entry.
+     */
     public function displayTravelEntry($row, $total) {
 
         echo "<tr>";
@@ -283,6 +301,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display a stay entry.
+     */
     public function displayStayEntry($row, $total) {
 
         echo "<tr>";
@@ -332,6 +353,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the total sum.
+     */
     public function displayTravelTotal($total) {
 
         echo "<tr>";
@@ -377,6 +401,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the Acknowledgement text.
+     */
     public function displayAcknowledgement() {
 
         echo "<br/>";
@@ -419,6 +446,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the Signature box.
+     */
     public function displaySignature() {
 
         echo "<table class  = 'sign' id = 'toBeApplied'>";
@@ -448,13 +478,14 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the travel details table body.
+     */
     public function displayTravelTableBody() {
 
         $array = $this->getEnd();
-//        $this->display($array);
         $total = 0;
         foreach ($array as $row) {
-//            $this->display($row);
             if ($row->getType() == "Travel") {
                 $total = $this->displayTravelEntry($row, $total);
             }
@@ -470,6 +501,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the travel details table.
+     */
     public function displayTravelData() {
 
         echo "<table class='t3'>";
@@ -479,6 +513,9 @@ class Display {
 
     }
 
+    /**
+     * Utility function to display the data in formatted way.
+     */
     public function display_($data) {
 
         echo "<pre>";
@@ -486,11 +523,13 @@ class Display {
         echo "<pre>";
         
     }
-    
+
+    /**
+     * Main function which displays the data in IRISET format.
+     */
     public function display() {
 
         echo "<div class='main'>";
-//        $this->display_($this->getEnd());
         $this->displayOfficerData();
         $this->displayTravelData();
         echo "</div>";
