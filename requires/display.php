@@ -85,6 +85,10 @@ class Display {
      */
     public function displayNameTable() {
 
+        echo "<script>";
+        echo "document.title = 'TA Form - ".$this->getOfficerData()->getName()." (".$this->getOfficerData()->getMonth().")'";
+        echo "</script>";
+
         echo "<table class='t1'>";
         echo "<tr>";
         echo "<td>";
