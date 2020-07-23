@@ -541,25 +541,25 @@
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for="inputName">Name *</label>
-                        <input type='text' name = 'name' placeholder='Your Name' value = '' class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name = 'name' required = 'required' placeholder='Your Name' value = '' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for="inputDesignation">Designation *</label>
-                        <input type='text' name = 'designation' value='IRSSE(P)-2018' placeholder='Designation'  class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name = 'designation' required = 'required' value='IRSSE(P)-2018' placeholder='Designation'  class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for='inputMonth'>Month *</label>
-                        <input type='text' name='month'  placeholder='TA Month' value = '' class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name='month' required = 'required' placeholder='TA Month' value = '' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for='inputPayBand'>Pay Band *</label>
-                        <input type='text' name = 'payBand' value='15,600 - 39,100' placeholder='Your PayBand' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name = 'payBand'  value='15,600 - 39,100' placeholder='Your PayBand' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
