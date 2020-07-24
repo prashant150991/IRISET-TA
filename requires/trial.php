@@ -695,18 +695,7 @@ class Trial {
                                     $end = $this->setMidTravel($details, $i, $end);
 
                                     $row = $this->setHalfRowTravelling($details, $i, 1);
-                                    $add += $this->getHours($endTime, "00:00");
-                                    if ($details[$i+1]->getConti() == true) {
-
-                                        $ref = $endTime;
-
-                                    }
-                                    else {
-
-                                        $ref = $details[$i+1]->getDepTime();
-
-                                    }
-
+                                    $ref = "00:00";
                                     array_push($end, $row);
 
                                 }
