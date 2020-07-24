@@ -24,7 +24,7 @@ class Instructions {
         echo "<li class='list-group-item'>Enter valid dates and time.</li>";
         echo "<li class='list-group-item'>Enter each journey and stay seperately even if both are on same day.</li>";
         echo "<li class='list-group-item'>If not travelled by train, enter the used mode of transport.(e.g. Bus or Flight)</li>";
-        echo "<li class='list-group-item'>If the time gap between two entries (if any) is not to be considered for calculating TA, please change the 'Is gap eligible for TA?' checkbox to No.</li>";
+        echo "<li class='list-group-item'>If the gap between tow journeys is not to be considered for calculating TA, please change the 'Is gap eligible for TA?' checkbox to No.</li>";
         echo "<li class='list-group-item'>After submitting the form, TA format will be generated. To save it as PDF, press CTRL+P or select the print option from browser's menu.</li>";
         echo "<li class='list-group-item'>If using Google Chrome, use the custom margins option to adjust the layout.</li>";
         echo "</div>";

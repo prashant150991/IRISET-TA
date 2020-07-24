@@ -188,7 +188,7 @@ class Trial {
             $this->display(0, "ttt = ".$rows);
             $truee = 1;
             $counter = 1;
-            while ($counter <= $rows) {
+            while ($truee <= $rows) {
 
                 $startDate = "startDate_".$counter;
                 $endDate = "endDate_".$counter;
@@ -204,12 +204,12 @@ class Trial {
 
                 if (!isset($_POST[$startDate]) || $_POST[$startDate] == "") {
 
-//                    if ($truee == $rows) {
-//                        break;
-//                    }
-//                    else {
+                    if ($truee == $rows) {
+                        break;
+                    }
+                    else {
                         $counter++;
-//                    }
+                    }
 
                 }
                 else {

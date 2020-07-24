@@ -11,8 +11,6 @@
 
     <script language="JavaScript">
         var count = 0;
-        var row_count = 1;
-        var max_rows = 0;
 
         function valu() {
 
@@ -28,11 +26,7 @@
             }
             else {
                 var m = false;
-                while (counter2 <= max_rows) {
-                    console.log("max_rows = " + max_rows);
-                    if (counter2 > max_rows || counter1 > max_rows) {
-                        break;
-                    }
+                while (counter2 <= count) {
 
                     var x = "yo_" + counter1;
                     console.log(x);
@@ -318,8 +312,6 @@
                     }
                 }
             }
-            console.clear();
-            console.log(max_rows);
             return m;
         }
 
@@ -327,7 +319,7 @@
             var m = false;
             // window.alert(count);
             if (valu()) {
-                document.getElementById("trr").setAttribute("value", max_rows);
+                document.getElementById("trr").setAttribute("value", count);
                 m = window.confirm("Confirm Submit?");
             }
             return m;
@@ -342,14 +334,7 @@
                 var xx = "yo_" + d;
                 var element = document.getElementById(xx);
                 element.parentNode.removeChild(element);
-                // count = count - 1;
-                x = document.getElementsByClassName('row_number');
-                new_count = 1;
-                for (i=0;i<x.length;i++) {
-                    x[i].innerHTML = new_count;
-                    new_count += 1;
-                }
-                row_count = new_count;
+                count = count - 1;
             }
         }
 
@@ -369,7 +354,6 @@
         function insertNewRow(){
 
             count=count+1;
-            max_rows += 1;
             var startDate = "startDate_"+count;
             var d = document.getElementById("travelAllowance");
             var d1 = document.getElementById("yo1");
@@ -384,9 +368,7 @@
             }
 
                 addi+="<div class='row' id = 'first'>"
-                +"<div class='row_number'>"
-                +row_count
-                +"</div>"
+                +count
                 +"<div class='form-row' id = 'firstf'>"
                 +"<div class='col-lg-3 col-xs-12' id = 'first1'>"
                 +"<div class='form-group'>"
@@ -475,14 +457,12 @@
                 +"<hr class='style4'>";
 
             d.insertAdjacentHTML('beforeend', addi);
-            row_count += 1;
             predict();
 
         }
 
         function insertRowForStay(){
             count=count+1;
-            max_rows += 1;
             var startDate = "startDate_"+count;
             var d = document.getElementById("travelAllowance");
 
@@ -496,9 +476,7 @@
             }
 
             addi+= "<div class = 'row' id = 'fourth'>"
-                +"<div class = 'row_number'>"
-                +row_count
-                +"</div>"
+                +count
                 +"<div class = 'form-row' id = 'fourthf'>"
                 +"<div class = 'col-lg-3 col-xs-12' id = 'fourth1'>"
                 +"<div class='form-group'>"
@@ -539,7 +517,6 @@
                 +"<hr class='style4'>";
 
             d.insertAdjacentHTML('beforeend', addi);
-            row_count += 1;
             predict();
         }
 
