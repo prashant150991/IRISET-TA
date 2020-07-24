@@ -2305,7 +2305,7 @@ class Trial {
                         if ($this->isTravel($prev)) {
 
                             $this->display(0, "Territory 2.2.1.1");
-                            if($prevEndDate == $endDate) {      //  ([x-a][a-y])
+                            if($prevEndDate == $nextStartDate) {      //  ([x-a][a-y])
 
                                 $this->display(0, "Territory 2.2.1.1.1");
                                 if ($startDate == $endDate) {   //  ([x-a][a-a])
