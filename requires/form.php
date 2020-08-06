@@ -371,7 +371,7 @@
             }
 
             addi += "<div class='row' id = 'first'>"
-                + count
+                // + count
                 + "<div class='form-row' id = 'firstf'>"
                 + "<div class='col-lg-3 col-xs-12' id = 'first1'>"
                 + "<div class='form-group'>"
@@ -482,7 +482,7 @@
             }
 
             addi+= "<div class = 'row' id = 'fourth'>"
-                +count
+                // +count
                 +"<div class = 'form-row' id = 'fourthf'>"
                 +"<div class = 'col-lg-3 col-xs-12' id = 'fourth1'>"
                 +"<div class='form-group'>"
