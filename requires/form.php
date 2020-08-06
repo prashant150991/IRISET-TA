@@ -11,6 +11,7 @@
 
     <script language="JavaScript">
         var count = 0;
+        var count2 = 0;
 
         function valu() {
 
@@ -18,7 +19,7 @@
             var counter2 = 1;
             var prev = -1;
             var flag = 1;
-            if (count == 0) {
+            if (count2 == 0) {
 
                 window.alert("Add at least one entry.");
                 return false;
@@ -26,7 +27,7 @@
             }
             else {
                 var m = false;
-                while (counter2 <= count) {
+                while (counter2 <= count2) {
 
                     var x = "yo_" + counter1;
                     console.log(x);
@@ -334,7 +335,8 @@
                 var xx = "yo_" + d;
                 var element = document.getElementById(xx);
                 element.parentNode.removeChild(element);
-                count = count - 1;
+                // count = count - 1;
+                count2 = count2 - 1;
             }
         }
 
@@ -351,104 +353,107 @@
 
         }
         
-        function insertNewRow(){
+        function insertNewRow() {
 
-            count=count+1;
-            var startDate = "startDate_"+count;
+            count = count + 1;
+            count2 = count2 + 1;
+            var startDate = "startDate_" + count;
             var d = document.getElementById("travelAllowance");
             var d1 = document.getElementById("yo1");
             var d2 = document.getElementById("yo2");
 
-            var addi = "<div class = 'row justify-content-center centerBlock' id = 'yo_"+count+"'>";
+            var addi = "<div class = 'row justify-content-center centerBlock' id = 'yo_" + count + "'>";
             if (count > 1) {
 
                 addi += "<div class = 'row chec'>"
-                    +"Is the gap eligible for TA? &nbsp&nbsp&nbsp&nbsp<input type = 'radio' id = 'continuous_"+count+"' value = 'yes' checked = 'checked' name = 'conti_"+count+"' > &nbspYes&nbsp&nbsp<br><input type = 'radio' id = 'continuous_"+count+"' value = 'no'  name = 'conti_"+count+"' > &nbspNo </div>";
+                    + "Is the gap eligible for TA? &nbsp&nbsp&nbsp&nbsp<input type = 'radio' id = 'continuous_" + count + "' value = 'yes' checked = 'checked' name = 'conti_" + count + "' > &nbspYes&nbsp&nbsp<br><input type = 'radio' id = 'continuous_" + count + "' value = 'no'  name = 'conti_" + count + "' > &nbspNo </div>";
 
             }
 
-                addi+="<div class='row' id = 'first'>"
-                +count
-                +"<div class='form-row' id = 'firstf'>"
-                +"<div class='col-lg-3 col-xs-12' id = 'first1'>"
-                +"<div class='form-group'>"
-                +"<div class = 'sss'>"
-                +"<label>Start Date *</label>"
-                +"<input type='date'  placeholder='Start Date' required = 'required' value = '' class = 'startDate form-control formData' id = '"+startDate+"' name='"+startDate+"'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'first2'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>End Date *</label>"
-                +"<input type='date'  class = 'endDate form-control formData' required = 'required' id = 'endDate_"+count+"' name = 'endDate_"+count+"' placeholder = 'Enter your Name'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'first3'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Source Station *</label>"
-                +"<input type = 'text'  class = 'fromStation form-control formData' value = '' required = 'required' id = 'fromStation_"+count+"' name = 'fromStation_"+count+"' placeholder = 'Enter Source Station'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'first4'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Destination Station *</label>"
-                +"<input type = 'text'  class = 'toStation form-control formData' required = 'required' value = '' id = 'toStation_"+count+"' name = 'toStation_"+count+"' placeholder = ' Destination Station'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'second1'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Departure Time *</label>"
-                +"<input type = 'time'  class = 'depTime form-control formData' id = 'depTime_"+count+"' required = 'required' name = 'depTime_"+count+"'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'second2'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Arrival Time *</label>"
-                +"<input type = 'time'  class = 'arrTime form-control formData' required = 'required' id = 'arrTime_"+count+"' name = 'arrTime_"+count+"'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'second3'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Train Number *</label>"
-                +"<input type = 'text'  class = 'train form-control formData' value = '' required = 'required' id = 'train_"+count+"' name = 'train_"+count+"' placeholder = 'Enter Train number'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'second4'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Distance</label>"
-                +"<input type = 'text' class = 'distance form-control formData' value = '' id = 'distance_"+count+"' name = 'distance_"+count+"' placeholder = 'Enter Distance in KM'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'third1'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<label>Objective of Journey *</label>"
-                +"<input type = 'text'  class = 'objective form-control formData' required = 'required' value = '' id = 'objective_"+count+"' name = 'objective_"+count+"' placeholder = 'Objective of the journey'>"
-                +"</div>"
-                +"</div>"
-                +"</div>"
-                +"<div class='col-lg-3 col-xs-12' id = 'third2'>"
-                +"<div class = 'container'>"
-                +"<div class='form-group'>"
-                +"<div class = sss>"
-                +"<br>"
-                +'<button type="button" class="btn btn-lg btn-danger" onclick="deleteRo(this.parentNode.parentNode.parentNode.parentNode.previousSibling.firstChild.firstChild.lastChild.name)">Delete</button>'
-                +"</div>"
+            addi += "<div class='row' id = 'first'>"
+                + count
+                + "<div class='form-row' id = 'firstf'>"
+                + "<div class='col-lg-3 col-xs-12' id = 'first1'>"
+                + "<div class='form-group'>"
+                + "<div class = 'sss'>"
+                + "<label>Start Date *</label>"
+                + "<input type='date'  placeholder='Start Date' required = 'required' value = '' class = 'startDate form-control formData' id = '" + startDate + "' name='" + startDate + "'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'first2'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>End Date *</label>"
+                + "<input type='date'  class = 'endDate form-control formData' required = 'required' id = 'endDate_" + count + "' name = 'endDate_" + count + "' placeholder = 'Enter your Name'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'first3'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Source Station *</label>"
+                + "<input type = 'text'  class = 'fromStation form-control formData' value = '' required = 'required' id = 'fromStation_" + count + "' name = 'fromStation_" + count + "' placeholder = 'Enter Source Station'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'first4'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Destination Station *</label>"
+                + "<input type = 'text'  class = 'toStation form-control formData' required = 'required' value = '' id = 'toStation_" + count + "' name = 'toStation_" + count + "' placeholder = ' Destination Station'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'second1'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Departure Time *</label>"
+                + "<input type = 'time'  class = 'depTime form-control formData' id = 'depTime_" + count + "' required = 'required' name = 'depTime_" + count + "'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'second2'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Arrival Time *</label>"
+                + "<input type = 'time'  class = 'arrTime form-control formData' required = 'required' id = 'arrTime_" + count + "' name = 'arrTime_" + count + "'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'second3'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Train Number *</label>"
+                + "<input type = 'text'  class = 'train form-control formData' value = '' required = 'required' id = 'train_" + count + "' name = 'train_" + count + "' placeholder = 'Enter Train number'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'second4'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Distance</label>"
+                + "<input type = 'text' class = 'distance form-control formData' value = '' id = 'distance_" + count + "' name = 'distance_" + count + "' placeholder = 'Enter Distance in KM'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'third1'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<label>Objective of Journey *</label>"
+                + "<input type = 'text'  class = 'objective form-control formData' required = 'required' value = '' id = 'objective_" + count + "' name = 'objective_" + count + "' placeholder = 'Objective of the journey'>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+                + "<div class='col-lg-3 col-xs-12' id = 'third2'>"
+                + "<div class = 'container'>"
+                + "<div class='form-group'>"
+                + "<div class = sss>"
+                + "<br>";
+                if (count != 1) {
+                    addi += '<button type="button" class="btn btn-lg btn-danger" onclick="deleteRo(this.parentNode.parentNode.parentNode.parentNode.previousSibling.firstChild.firstChild.lastChild.name)">Delete</button>';
+                }
+                addi += "</div>"
                 +"</div>"
                 +"</div>"
                 +"</div>"
@@ -463,6 +468,7 @@
 
         function insertRowForStay(){
             count=count+1;
+            count2 = count2 + 1;
             var startDate = "startDate_"+count;
             var d = document.getElementById("travelAllowance");
 
@@ -506,9 +512,11 @@
                 +"<div class = 'container'>"
                 +"<div class='form-group'>"
                 +"<div class = sss>"
-                +"<br>"
-                +'<button type="button" class="btn btn-lg btn-danger" onclick="deleteRo(this.parentNode.parentNode.parentNode.parentNode.previousSibling.firstChild.firstChild.lastChild.name)">Delete</button>'
-                +"</div>"
+                +"<br>";
+                if (count != 1) {
+                    addi += '<button type="button" class="btn btn-lg btn-danger" onclick="deleteRo(this.parentNode.parentNode.parentNode.parentNode.previousSibling.firstChild.firstChild.lastChild.name)">Delete</button>';
+                }
+                addi += "</div>"
                 +"</div>"
                 +"</div>"
                 +"</div>"

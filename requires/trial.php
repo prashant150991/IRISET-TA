@@ -188,8 +188,9 @@ class Trial {
             $this->display(0, "ttt = ".$rows);
             $truee = 1;
             $counter = 1;
-            while ($truee <= $rows) {
-
+//            echo $rows;
+            while ($counter <= $rows) {
+//                break;
                 $startDate = "startDate_".$counter;
                 $endDate = "endDate_".$counter;
                 $train = "train_".$counter;
@@ -204,12 +205,7 @@ class Trial {
 
                 if (!isset($_POST[$startDate]) || $_POST[$startDate] == "") {
 
-                    if ($truee == $rows) {
-                        break;
-                    }
-                    else {
-                        $counter++;
-                    }
+                    $counter++;
 
                 }
                 else {
@@ -695,7 +691,19 @@ class Trial {
                                     $end = $this->setMidTravel($details, $i, $end);
 
                                     $row = $this->setHalfRowTravelling($details, $i, 1);
-                                    $ref = "00:00";
+                                    $add += $this->getHours($endTime, "00:00");
+                                    if ($details[$i+1]->getConti() == true) {
+
+                                        $ref = $endTime;
+
+                                    }
+                                    else {
+
+                                        $ref = $details[$i+1]->getDepTime();
+
+                                    }
+
+//                                    $ref = "00:00";
                                     array_push($end, $row);
 
                                 }
