@@ -1524,6 +1524,7 @@ class Trial {
                                         $row = $this->setHalfRowTravelling($details, $i, 0);
                                         $add+= $this->getHours($ref, "24:00");
                                         $row->setDays($this->getDiv($add));
+                                        array_push($end, $row);
                                         $ref = "00:00";
                                         $add = 0;
 
