@@ -657,7 +657,7 @@ class Trial {
 
                                         $this->display(0, "Territory 1.1.2.1.1.1.1");
                                         $ref = $nextStartTime;
-                                        $this->dasp("Ref = ".$ref);
+//                                        $this->dasp("Ref = ".$ref);
 
                                     }
                                     else {
@@ -904,8 +904,8 @@ class Trial {
                                     $add+= $this->getHours($ref, $endTime);
                                     $row->setDays($this->getDiv($add));
                                     array_push($end, $row);
-                                    $this->dasp("Add = ".$add);
-                                    $this->dasp("Ref = ".$ref);
+//                                    $this->dasp("Add = ".$add);
+//                                    $this->dasp("Ref = ".$ref);
 
                                 }
                                 elseif ($startDate != $endDate) {     //  ([x-a][a-b])
