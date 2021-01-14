@@ -1,0 +1,24 @@
+<?php
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<table class  = 'sign' id = 'toBeApplied'>";
+echo "<tr>";
+echo "<td width='31%' style='text-align: center'>";
+echo "नियंत्रण अधिकारी";
+echo "<br>";
+echo "Controlling Officer";
+echo "</td>";
+echo "<td width='31%' style='text-align: center'>";
+echo "कार्यालय प्रमुख";
+echo "<br>";
+echo "Head of Office";
+echo "</td>";
+echo "<td width='38%' style='text-align: center'>";
+echo "यात्रा भत्ता मांगने वाले अधिकारी के हस्ताक्षर";
+echo "<br>";
+echo "Signature of officer claiming T. A.";
+echo "</td>";
+echo "</tr>";
+echo "</table>";

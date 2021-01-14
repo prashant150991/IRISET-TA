@@ -210,3 +210,13 @@ hr.style4 {
     margin: 10px;
 
 }
+
+select {
+    text-align: center;
+    text-align-last: center;
+    /* webkit*/
+}
+
+option {
+    text-align: left;
+}

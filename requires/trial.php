@@ -145,7 +145,8 @@ class Trial {
     public function getData() {
 
         if (isset($_POST['tutu'])) {
-
+//            var_dump($_POST);
+//            die();
             $officerData = $this->setOfficerData();
             $detailsData = $this->setDetailsData();
             $data = new Data($officerData, $detailsData, count($detailsData));
@@ -166,11 +167,15 @@ class Trial {
         $name = trim($_POST['name']);
         $designation = trim($_POST['designation']);
         $month = trim($_POST['month']);
-        $payBand = trim($_POST['payBand']);
+        $payBand = trim($_POST['gradePay']);
         $basicPay = trim($_POST['basicPay']);
         $dateOfJoining = trim($_POST['dateOfJoining']);
+        $zoneOrUnit = trim($_POST['zoneOrUnit']);
+        $division = trim($_POST['division']);
+        $pfNumber = trim($_POST['pfNumber']);
+        $perDayTA = trim($_POST['perDayTA']);
 
-        $officerData = new Officer($name, $designation, $month, $payBand, $basicPay, $dateOfJoining);
+        $officerData = new Officer($name, $designation, $month, $payBand, $basicPay, $dateOfJoining, $zoneOrUnit, $division, $pfNumber, $perDayTA);
         return $officerData;
 
     }

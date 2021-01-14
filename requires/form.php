@@ -538,7 +538,7 @@
     <div class='row justify-content-center heading'>
         <a href = "../">
         <h2>
-            IRISET TRAVELLING ALLOWANCE JOURNAL (β)
+            TRAVELLING ALLOWANCE JOURNAL (β)
         </h2>
         </a>
     </div>
@@ -555,7 +555,7 @@
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
                         <label for="inputDesignation">Designation *</label>
-                        <input type='text' name = 'designation' required = 'required' value='IRSSE(P)-2018' placeholder='Designation'  class="form-control form-control-lg formData" id="inputEmail4">
+                        <input type='text' name = 'designation' required = 'required' value='' placeholder='Designation'  class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
@@ -566,20 +566,54 @@
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
-                        <label for='inputPayBand'>Pay Band *</label>
-                        <input type='text' name = 'payBand' value='15,600 - 39,100' placeholder='Your PayBand' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
+                        <label for='inputPayBand'>Grade Pay *</label>
+                        <input type='text' name = 'gradePay' value='' placeholder='Grade Pay' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
-                        <label for='inputBasicPay'>Basic Pay *</label>
-                        <input type='text' name='basicPay' value='57,800' placeholder='Your Basic Pay' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
+                        <label for='inputBasicPay'>Basic Pay </label>
+                        <input type='text' name='basicPay' value='' placeholder='Your Basic Pay'  class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
-                        <label for='inputDateOfJoining'>Date of Joining *</label>
-                        <input type='text' name='dateOfJoining' value='8th July 2019' placeholder='Date Of Joining' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
+                        <label for='inputDateOfJoining'>Date of Joining </label>
+                        <input type='text' name='dateOfJoining' value='' placeholder='Date Of Joining'  class="form-control form-control-lg formData" id="inputEmail4">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-row" style="width:100%">
+                <div class='form-group col-sm-12 col-md-12 formLabel'>
+                    <div class='fff'>
+                        <label for='zoneOrUnit'>Zone/Unit *</label>
+                        <select  name = "zoneOrUnit" class="form-control form-control-lg" id="exampleFormControlSelect1" style="text-align: center">
+                            <option>IRISET</option>
+                            <option>NR</option>
+                            <option>SCR</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="width:100%">
+                <div class='form-group col-sm-12 col-md-4 formLabel'>
+                    <div class='fff'>
+                        <label for='inputDateOfJoining'>Division </label>
+                        <input type='text' name='division' value='' placeholder='Division'  class="form-control form-control-lg formData" id="inputEmail4">
+                    </div>
+                </div>
+                <div class='form-group col-sm-12 col-md-4 formLabel'>
+                    <div class='fff'>
+                        <label for='inputDateOfJoining'>PF Number </label>
+                        <input type='text' name='pfNumber' value='' placeholder='PF NUmber'  class="form-control form-control-lg formData" id="inputEmail4">
+                    </div>
+                </div>
+                <div class='form-group col-sm-12 col-md-4 formLabel'>
+                    <div class='fff'>
+                        <label for='inputDateOfJoining'>Per Day TA in Rupees*</label>
+                        <input type='number' name='perDayTA' value=900 placeholder='Per Day TA' required = 'required' class="form-control form-control-lg formData" id="inputEmail4">
                     </div>
                 </div>
             </div>

@@ -31,6 +31,10 @@ class Data {
         $this->officerData->setPayBand($officer->payBand);
         $this->officerData->setBasicPay($officer->basicPay);
         $this->officerData->setDateOfJoining($officer->dateOfJoining);
+        $this->officerData->setZoneOrUnit($officer->zoneOrUnit);
+        $this->officerData->setDivision($officer->division);
+        $this->officerData->setPfNumber($officer->pfNumber);
+        $this->officerData->setPerDayTA($officer->perDayTA);
         return $officerData;
 
     }
@@ -39,7 +43,7 @@ class Data {
 
         $this->officerData = new Officer($officerData->getName(),
             $officerData->getDesignation(), $officerData->getMonth(), $officerData->getPayBand(),
-            $officerData->getBasicPay(), $officerData->getdateOfJoining());
+            $officerData->getBasicPay(), $officerData->getdateOfJoining(), $officerData->getZoneOrUnit(), $officerData->getDivision(), $officerData->getPfNumber(), $officerData->getPerDayTA());
 
         $this->details = [];
         $this->details = $details;

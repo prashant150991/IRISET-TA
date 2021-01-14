@@ -1,7 +1,5 @@
 <?php
 
-include 'header.php';
-
 class Display {
 
     private $end;
@@ -9,6 +7,7 @@ class Display {
 
     /**
      * Display constructor.
+     * @param $officerData
      * @param $end
      */
     public function __construct($officerData, $end) {
@@ -112,6 +111,10 @@ class Display {
         echo "</div>";
         echo "</td>";
         echo "<td>";
+        echo "<div class = 'ddd'>";
+        //                            echo "का ग्र तिथि/DOJ:  <b>08 July 2019</b>";
+        $division = ($this->getOfficerData()->getDivision() == "")? "-": $this->getOfficerData()->getDivision();
+        echo "माह/Division:  <b>" .$division. "</b>";
         echo "</td>";
         echo "</tr>";
         echo "</table>";
@@ -128,13 +131,15 @@ class Display {
         echo "<td>";
         echo "<div class = 'ddd'>";
 //<!--               	echo "वेतन बैंड/Pay Band: <b>PB-3 15600-39100</b>";
-        echo "वेतन बैंड/Pay Band: <b>". $this->getOfficerData()->getPayBand(). "</b>";
+        $payBand = ($this->getOfficerData()->getPayBand() == "")? "-": $this->getOfficerData()->getpayBand();
+        echo "वेतन बैंड/Pay Band: <b>". $payBand. "</b>";
         echo "</div>";
         echo "</td>";
         echo "<td>";
         echo "<div class = 'ddd'>";
 //                            echo "मूल वेतन/Basic Pay:    <b>56100/- (Level-10 of per 7th CPC)</b>";
-        echo "मूल वेतन/Basic Pay:    <b>". $this->getOfficerData()->getBasicPay(). "</b>";
+        $basicPay = ($this->getOfficerData()->getBasicPay() == "")? "-": $this->getOfficerData()->getBasicPay();
+        echo "मूल वेतन/Basic Pay:    <b>". $basicPay. "</b>";
         echo "</div>";
         echo "</td>";
         echo "</tr>";
@@ -142,10 +147,16 @@ class Display {
         echo "<td>";
         echo "<div class = 'ddd'>";
 //                            echo "का ग्र तिथि/DOJ:  <b>08 July 2019</b>";
-        echo "का ग्र तिथि/DOJ:  <b>" .$this->getOfficerData()->getDateOfJoining(). "</b>";
+        $dateOfJoining = ($this->getOfficerData()->getDateOfJoining() == "")? "-": $this->getOfficerData()->getDateOfJoining();
+        echo "का ग्र तिथि/DOJ:  <b>" .$dateOfJoining. "</b>";
         echo "</div>";
         echo "</td>";
         echo "<td>";
+        echo "<div class = 'ddd'>";
+//                            echo "का ग्र तिथि/DOJ:  <b>08 July 2019</b>";
+        $pfNumber = ($this->getOfficerData()->getPfNumber() == "")? "-": $this->getOfficerData()->getPfNumber();
+        echo "का ग्र तिथि/PF Number:  <b>" .$pfNumber. "</b>";
+        echo "</div>";
         echo "</td>";
         echo "</tr>";
         echo "</table>";
@@ -295,7 +306,7 @@ class Display {
             echo "-";
         }
         else {
-            echo $days. "* 900 = ". $days*900;
+            echo $days. "* ".$this->getOfficerData()->getPerDayTA()." = ". $days*$this->getOfficerData()->getPerDayTA();
         }
         echo "</div>";
         echo "</td>";
@@ -344,7 +355,7 @@ class Display {
         echo "<td>";
         echo "<div class='ddd'>";
         if ($days != "-") {
-            echo $days . " x 900 = " . $days * 900;
+            echo $days . " x ".$this->getOfficerData()->getPerDayTA()." = " . $days * $this->getOfficerData()->getPerDayTA();
         }
         else {
             echo "-";
@@ -384,7 +395,7 @@ class Display {
 
         echo "<td>";
         echo "<div class='ddd'>";
-        $full = $total*900;
+        $full = $total*$this->getOfficerData()->getPerDayTA();
         echo "<b>".$full."/-</b>";
         echo "</div>";
         echo "</td>";
@@ -423,30 +434,6 @@ class Display {
         echo "<b>I hereby Certify that the above mentioned (".$this->getOfficerData()->getName().") was absent on duty from his headquarters
          station during the period charged for the bill on Railway business.</b>";
 
-        echo "<ol type = 'I'>";
-        echo "<li>";
-        echo "Certified that no TA/DA if any other remuneration has been drawn from any sources in respect of
-         journeys performed on duty pass and also for the halts for which TA/DA has been claimed in the bill.";
-        echo "</li>";
-        echo "<li>";
-        echo "Certified that the officer was actually and not merely constructively on duty Sunday & Holidays.";
-        echo "</li>";
-        echo "<li>";
-        echo "Certified that the officer was absent on duty from headquarters Station during the period.";
-        echo "</li>";
-        echo "<li>";
-        echo "Competent Authority's sanction has been obtained for performing.";
-        echo "</li>";
-        echo "<li>";
-        echo "Certified that the expenses have actually been incurred in the discharge of Railway duties 
-        and the amount has actually been spent in the interest of Administration.";
-        echo "</li>";
-        echo "<li>";
-        echo "In the case of officers attending training at training institutions, necessary certificate 
-        issued by the Training Institutions in respect of mess charges etc., incurred by officers along with
-         money receipt particulars wherever submitted have been enclosed.";
-        echo "</li>";
-        echo "</ol>";
 
     }
 
@@ -454,32 +441,7 @@ class Display {
      * Utility function to display the Signature box.
      */
     public function displaySignature() {
-
-        echo "<table class  = 'sign' id = 'toBeApplied'>";
-        echo "<tr>";
-        echo "<td width='24%'>";
-        echo "प्रति हस्ताक्षर";
-        echo "<br>";
-        echo "Countersigned";
-        echo "</td>";
-        echo "<td width='24%'>";
-        echo "नियंत्रण अधिकारी";
-        echo "<br>";
-        echo "Controlling Officer";
-        echo "</td>";
-        echo "<td width='24%'>";
-        echo "कार्यालय प्रमुख";
-        echo "<br>";
-        echo "Head of Office";
-        echo "</td>";
-        echo "<td width='28%'>";
-        echo "यात्रा भत्ता मांगने वाले अधिकारी के हस्ताक्षर";
-        echo "<br>";
-        echo "Signature of officer claiming T. A.";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
-
+        include "./footers/scr_footer.php";
     }
 
     /**
@@ -501,7 +463,7 @@ class Display {
 
         $full = $this->displayTravelTotal($total);
         $this->displayAcknowledgement();
-        $this->displaySignature();
+//        $this->displaySignature();
 
     }
 
@@ -532,11 +494,12 @@ class Display {
      * Main function which displays the data in IRISET format.
      */
     public function display() {
-
+        include "header.php";
         echo "<div class='main'>";
         $this->displayOfficerData();
         $this->displayTravelData();
         echo "</div>";
+        include "footer.php";
 
     }
 

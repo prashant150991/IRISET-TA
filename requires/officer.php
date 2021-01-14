@@ -6,9 +6,13 @@ class Officer {
     private $name = "";
     private $designation = "";
     private $month = "";
-    private $payBand = "";
-    private $basicPay = "";
-    private $dateOfJoining = "";
+    private $payBand = "-";
+    private $basicPay = "-";
+    private $dateOfJoining = "-";
+    private $zoneOrUnit = "";
+    private $division = "-";
+    private $pfNumber = "-";
+    private $perDayTA = 0;
 
     /**
      * Officer constructor.
@@ -18,15 +22,25 @@ class Officer {
      * @param string $payBand
      * @param string $basicPay
      * @param string $dateOfJoining
+     * @param string $zoneOrUnit
+     * @param string $division
+     * @param string $pfNumber
+     * @param int $perDayTA
      */
-    public function __construct($name, $designation, $month, $payBand, $basicPay, $dateOfJoining) {
+    public function __construct($name, $designation, $month, $payBand, $basicPay, $dateOfJoining, $zoneOrUnit, $division, $pfNumber, $perDayTA)
+    {
         $this->name = $name;
         $this->designation = $designation;
         $this->month = $month;
         $this->payBand = $payBand;
         $this->basicPay = $basicPay;
         $this->dateOfJoining = $dateOfJoining;
+        $this->zoneOrUnit = $zoneOrUnit;
+        $this->division = $division;
+        $this->pfNumber = $pfNumber;
+        $this->perDayTA = $perDayTA;
     }
+
 
     /**
      * @return string
@@ -110,6 +124,70 @@ class Officer {
      */
     public function setDateOfJoining($dateOfJoining) {
         $this->dateOfJoining = $dateOfJoining;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZoneOrUnit()
+    {
+        return $this->zoneOrUnit;
+    }
+
+    /**
+     * @param string $zoneOrUnit
+     */
+    public function setZoneOrUnit($zoneOrUnit)
+    {
+        $this->zoneOrUnit = $zoneOrUnit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDivision()
+    {
+        return $this->division;
+    }
+
+    /**
+     * @param string $division
+     */
+    public function setDivision($division)
+    {
+        $this->division = $division;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPfNumber()
+    {
+        return $this->pfNumber;
+    }
+
+    /**
+     * @param string $pfNumber
+     */
+    public function setPfNumber($pfNumber)
+    {
+        $this->pfNumber = $pfNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPerDayTA()
+    {
+        return $this->perDayTA;
+    }
+
+    /**
+     * @param int $perDayTA
+     */
+    public function setPerDayTA($perDayTA)
+    {
+        $this->perDayTA = $perDayTA;
     }
 
 
