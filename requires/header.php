@@ -9,3 +9,6 @@ elseif ($this->getOfficerData()->getZoneOrUnit() == "SCR") {
 elseif ($this->getOfficerData()->getZoneOrUnit() == "NR") {
     include "./headers/nr_header.php";
 }
+elseif ($this->getOfficerData()->getZoneOrUnit() == "ECoR") {
+    include "./headers/ecor_header.php";
+}

@@ -591,6 +591,7 @@
                         <label for='zoneOrUnit'>Zone/Unit *</label>
                         <select  name = "zoneOrUnit" class="form-control form-control-lg" id="exampleFormControlSelect1" style="text-align: center">
                             <option>IRISET</option>
+                            <option>ECoR</option>
                             <option>NR</option>
                             <option>SCR</option>
                         </select>
