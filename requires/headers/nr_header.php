@@ -23,7 +23,7 @@ echo "<br/>";
     </div>
     <div class="column2" >
         <div class = "yo" >
-            <div class = "hi" style="font-size: 30px">
+            <div class = "hi" style="font-weight: bolder; font-size: 18px">
                 उत्तर रेलवे <br>
                 Northern Railway
             </div>
