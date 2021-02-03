@@ -23,13 +23,13 @@ echo "<br/>";
     </div>
     <div class="column2" >
         <div class = "yo" >
-            <div class = "hi" style="font-size: 30px">
+            <div class = "hi" style="font-weight: bolder; font-size: 18px">
                    दक्षिण मध्य रेलवे<br>
                 South Central Railway
             </div>
         </div>
     </div>
 </div>
-<div class="format">
+<div class="format" style="font-weight: 100">
     <b>TRAVELLING ALLOWANCE JOURNAL</b>
 </div>

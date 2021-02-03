@@ -424,7 +424,7 @@ class Display {
         echo "<br/>";
         echo "<br/>";
         echo "<br/>";
-
+        echo "<div class = 'fin'>";
         echo "मैं प्रमाणित करता हूं कि उपर्युक्त .................. इस अवधि के दौरान जिसके
          लिए इस बिल में भत्ता मांगा गया है, रेलवे के कार्य से ड्यूटी पर मुख्यालय स्टेशन से बाहर गए थे.";
 
@@ -433,6 +433,7 @@ class Display {
 
         echo "<b>I hereby Certify that the above mentioned (".$this->getOfficerData()->getName().") was absent on duty from his headquarters
          station during the period charged for the bill on Railway business.</b>";
+        echo "</div>";
 
 
     }
@@ -472,7 +473,7 @@ class Display {
      */
     public function displayTravelData() {
 
-        echo "<table class='t3'>";
+        echo "<table class='table table-bordered t3'>";
         $this->displayTravelTableHead();
         $this->displayTravelTableBody();
         echo "</table>";

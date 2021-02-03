@@ -329,9 +329,10 @@
         function deleteRo(row){
             if (window.confirm("Are you sure you want to delete this entry?")) {
                 // window.confirm()
-                var c = row.length;
+                var arr = row.split('_')
+                var c = arr.length;
                 c--;
-                var d = row.charAt(c);
+                var d = arr[c];
                 var xx = "yo_" + d;
                 var element = document.getElementById(xx);
                 element.parentNode.removeChild(element);
@@ -425,7 +426,7 @@
                 + "<div class='form-group'>"
                 + "<div class = sss>"
                 + "<label>Train Number *</label>"
-                + "<input type = 'text'  class = 'train form-control formData' value = '' required = 'required' id = 'train_" + count + "' name = 'train_" + count + "' placeholder = 'Enter Train number'>"
+                + "<input type = 'text'  class = 'train form-control formData' value = 'Road' required = 'required' id = 'train_" + count + "' name = 'train_" + count + "' placeholder = 'Enter Train number'>"
                 + "</div>"
                 + "</div>"
                 + "</div>"
@@ -433,7 +434,7 @@
                 + "<div class='form-group'>"
                 + "<div class = sss>"
                 + "<label>Distance</label>"
-                + "<input type = 'text' class = 'distance form-control formData' value = '' id = 'distance_" + count + "' name = 'distance_" + count + "' placeholder = 'Enter Distance in KM'>"
+                + "<input type = 'text' class = 'distance form-control formData' value = '> 8KM' id = 'distance_" + count + "' name = 'distance_" + count + "' placeholder = 'Enter Distance in KM'>"
                 + "</div>"
                 + "</div>"
                 + "</div>"
@@ -441,7 +442,7 @@
                 + "<div class='form-group'>"
                 + "<div class = sss>"
                 + "<label>Objective of Journey *</label>"
-                + "<input type = 'text'  class = 'objective form-control formData' required = 'required' value = '' id = 'objective_" + count + "' name = 'objective_" + count + "' placeholder = 'Objective of the journey'>"
+                + "<input type = 'text'  class = 'objective form-control formData' required = 'required' value = 'Something' id = 'objective_" + count + "' name = 'objective_" + count + "' placeholder = 'Objective of the journey'>"
                 + "</div>"
                 + "</div>"
                 + "</div>"
@@ -504,7 +505,7 @@
                 +"<div class='form-group'>"
                 +"<div class = sss>"
                 +"<label>Objective of Stay *</label>"
-                +"<input type = 'text'  class = 'objective form-control formData' value = '' id = 'objective_"+count+"' required = 'required' name = 'objective_"+count+"' placeholder = 'Objective of Stay'>"
+                +"<input type = 'text'  class = 'objective form-control formData' value = 'Some Value' id = 'objective_"+count+"' required = 'required' name = 'objective_"+count+"' placeholder = 'Objective of Stay'>"
                 +"</div>"
                 +"</div>"
                 +"</div>"

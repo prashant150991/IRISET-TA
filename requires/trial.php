@@ -1105,6 +1105,7 @@ class Trial {
                                             $row->setDays($this->getDiv($add));
                                             array_push($end, $row);
                                             $ref = $nextStartTime;
+                                            $add = 0;
 
                                         }
                                     }
@@ -1481,7 +1482,7 @@ class Trial {
                                     $this->display(0, "Territory 1.2.2.2.2.1");
                                     if ($endDate == $nextStartDate) {   //  ([x-a][b-b][b-y])
 
-                                        $this->display(0, "Territory 1.2.2.2.2.2.1");
+                                        $this->display(0, "Territory 1.2.2.2.2.1.1");
                                         $row = $this->setFullRowTravelling($details, $i, 0);
                                         $add+= $this->getHours($ref, $endTime);
                                         array_push($end, $row);
@@ -1490,7 +1491,7 @@ class Trial {
                                     }
                                     elseif ($endDate != $nextStartDate) { //  ([x-a][b-b][c-y])
 
-                                        $this->display(0, "Territory 1.2.2.2.2.2.2");
+                                        $this->display(0, "Territory 1.2.2.2.2.1.2");
                                         $row = $this->setFullRowTravelling($details, $i, 0);
                                         $add+= $this->getHours($ref, $endTime);
                                         $ref = $endTime;
