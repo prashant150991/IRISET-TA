@@ -38,7 +38,16 @@
     </div>
     <div style="display: none">
         <p>
-        Indian Railways Travel ALlowance Calculator, Generator and Printer. Just enter your travel details and get TA bill in specified format zone-wise.
+            Indian Railways Travel Allowance Calculator, Generator and Printer.
+        </p>
+        <p>
+            Just enter your travel details and get TA bill in specified format zone-wise. 
+            Enter basic details like Name, Designation, Grade Pay, Division, Date of Appointment, Month, PF Number.
+            Enter start date, start time, Train number, end date, end time, purpose of travel sequentially as per travel history. Select 
+        </p>
+        <p>
+            Zones available are East Coast Railway (ECoR), Northern Railway (NR), South Central Railway (SCR).
+            Institutes available are Indian Railways Institute of Signal Engineering and Telecommunications (IRISET).
         </p>
     </div>
 </div>
