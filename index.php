@@ -1,13 +1,14 @@
 
 <!doctype html>
-    <html lang="en">
+<html lang="en">
 
-    <head>
+<head>
     <title>Travel Allowance Generator</title>
     <link rel="shortcut icon" type="image/png" href="./files/images/favicon.jpg"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="./files/css/index.css" rel="stylesheet" type="text/css">
+    <meta name="description" content="Automatic Travel Allowance calculator and printer for Indian Railways.">
+    <link href="./files/css/index.css" rel="stylesheet" type="text/css">
     <script src="./files/js/jquery-3.4.1.min.js"></script>
     <script src="./files/js/bootstrap.min.js"></script>
     <link href="files/css/bootstrap.min.css" rel="stylesheet" type="text/css">
