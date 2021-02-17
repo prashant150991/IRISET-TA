@@ -18,6 +18,7 @@
 
 <div class="container align-items-center">
 <div class="box">
+    <h1 style="display:none">Indian Railways Travel Allowance generator</h1>
     <div class="row align-content-center hhh">
         <img src="./files/images/logo.jpg" alt = "Logo" height="100" width="100">
     </div>
