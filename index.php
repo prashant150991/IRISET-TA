@@ -1,7 +1,8 @@
 
-<!doctype html><html>
+<!doctype html>
+    <html lang="en">
 
-    <head lang="en">
+    <head>
     <title>Travel Allowance Generator</title>
     <link rel="shortcut icon" type="image/png" href="./files/images/favicon.jpg"/>
     <meta charset="utf-8">
