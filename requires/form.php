@@ -569,7 +569,7 @@
                 </div>
                 <div class='form-group col-sm-4 col-md-2 formLabel'>
                     <div class='fff'>
-                        <label for='payBand'>Grade Pay *</label>
+                        <label for='gradePay'>Grade Pay *</label>
                         <input type='text' name = 'gradePay' value='' placeholder='Grade Pay' required = 'required' class="form-control form-control-lg formData" id="gradePay">
                     </div>
                 </div>
@@ -592,7 +592,7 @@
                 <div class='form-group col-sm-12 col-md-12 formLabel'>
                     <div class='fff'>
                         <label for='zoneOrUnit'>Zone/Unit *</label>
-                        <select  name = "zoneOrUnit" id ="zoneOrUnit" class="form-control form-control-lg" id="exampleFormControlSelect1" style="text-align: center">
+                        <select  name = "zoneOrUnit" id ="zoneOrUnit" class="form-control form-control-lg" style="text-align: center">
                             <option>IRISET</option>
                             <option>ECoR</option>
                             <option>NR</option>
