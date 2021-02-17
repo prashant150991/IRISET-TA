@@ -18,7 +18,7 @@ class Credits {
         echo "<div class='list-group'>";
         echo "<a href='../'  class='list-group-item list-group-item-primary' style='text-align: center'><h3>Credits</h3></a>";
         echo "<a target='_blank' href='https://github.com/itsmepsk' class='list-group-item list-group-item' style='text-align: center'>Prathamesh Kakade (ADSTE Pakala)</a>";
-        echo "<a href='#' class='list-group-item' style='text-align: center'>Karamveer Prasad</li>";
+        echo "<a href='#' class='list-group-item' style='text-align: center'>Karamveer Prasad</a>";
         echo "</div>";
         echo "</div>";
         echo "</div>";
