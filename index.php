@@ -1,13 +1,14 @@
-<html>
 
-<head>
+<!doctype html><html>
+
+    <head lang="en">
     <title>Travel Allowance Generator</title>
     <link rel="shortcut icon" type="image/png" href="./files/images/favicon.jpg"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="./files/css/index.css" rel="stylesheet" type="text/css">
-    <script href="./files/js/jquery-3.4.1.min.js"></script>
-    <script href="./files/js/bootstrap.min.js"></script>
+    <script src="./files/js/jquery-3.4.1.min.js"></script>
+    <script src="./files/js/bootstrap.min.js"></script>
     <link href="files/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -16,7 +17,7 @@
 <div class="container align-items-center">
 <div class="box">
     <div class="row align-content-center hhh">
-        <img src="./files/images/logo.jpg" height="100" width="100">
+        <img src="./files/images/logo.jpg" alt = "Logo" height="100" width="100">
     </div>
     <div class="row align-content-center">
         <div class="col-md-6 offset-md-3 uuu">
