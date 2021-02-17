@@ -19,7 +19,7 @@ class Instructions {
         echo "<div class='col-md-6 offset-md-3 uuu'>";
         echo "<div class='list-group'>";
         echo "<ul>";
-        echo "<a href='../'  class='list-group-item list-group-item-primary' style='text-align: center'><h3>Instructions</h3></a>";
+        echo "<li class='list-group-item list-group-item-primary'><a href='../' style='text-align: center'><h3>Instructions</h3></a></li>";
         echo "<li class='list-group-item'>Works best on PC/Laptop and Google Chrome. But no worries ;) works with other devices and browsers as well.</li>";
         echo "<li class='list-group-item'>Enter all the journey and travel entries sequentially.</li>";
         echo "<li class='list-group-item'>Enter valid dates and time.</li>";
