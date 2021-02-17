@@ -25,15 +25,21 @@
     <div class="row align-content-center">
         <div class="col-md-6 offset-md-3 uuu">
             <div class="list-group">
-                <p><a href="./" class="list-group-item list-group-item-primary list-group-item-mine" style="text-align: center">IRISET Travel Allowance generator</a>
-                <a href="./extras/instructions.php" class="list-group-item list-group-item-action">
-                    Instructions for filling the form.
-                </a>
-                <a href="./extras/credits.php" class="list-group-item list-group-item-action">Credits</a>
-                <button style="text-align: center" onclick="location.href = './requires/form.php'" type="button" class="list-group-item list-group-item-action list-group-item-success">Click here to get started.</button>
+                <p>
+                    <a href="./" class="list-group-item list-group-item-primary list-group-item-mine" style="text-align: center">Indian Railways Travel Allowance generator</a>
+                    <a href="./extras/instructions.php" class="list-group-item list-group-item-action">
+                        Instructions for filling the form.
+                    </a>
+                    <a href="./extras/credits.php" class="list-group-item list-group-item-action">Credits</a>
+                    <button style="text-align: center" onclick="location.href = './requires/form.php'" type="button" class="list-group-item list-group-item-action list-group-item-success">Click here to get started.</button>
                 </p>
             </div>
         </div>
+    </div>
+    <div style="display: none">
+        <p>
+        Indian Railways Travel ALlowance Calculator, Generator and Printer. Just enter your travel details and get TA bill in specified format zone-wise.
+        </p>
     </div>
 </div>
 </div>
