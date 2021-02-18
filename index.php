@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Automatic Travel Allowance calculator and printer for Indian Railways.">
+    <meta name="google-site-verification" content="9KCQc7-svxpkhsN44rKdXkIJu1QJsQP4l32xqf7lyIg" />
     <link href="./files/css/index.css" rel="stylesheet" type="text/css">
     <script src="./files/js/jquery-3.4.1.min.js"></script>
     <script src="./files/js/bootstrap.min.js"></script>
