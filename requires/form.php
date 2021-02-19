@@ -18,6 +18,7 @@
 
 <div class='container'>
     <div class='row justify-content-center heading'>
+        <h1 style="display: none">Indian Railways Travel Allowance Generator</h1>
         <a href = "../">
         <h2>
             TRAVELLING ALLOWANCE JOURNAL (β)

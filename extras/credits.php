@@ -16,6 +16,7 @@ class Credits {
         echo "<div class='row align-content-center'>";
         echo "<div class='col-md-6 offset-md-3 uuu'>";
         echo "<div class='list-group'>";
+        echo "<h1 style='display:none'>Indian Railways Travel Allowance Generator</h1>";
         echo "<a href='../'  class='list-group-item list-group-item-primary' style='text-align: center'><h3>Credits</h3></a>";
         echo "<a target='_blank' href='https://github.com/itsmepsk' class='list-group-item list-group-item' style='text-align: center'>Prathamesh Kakade (ADSTE Pakala)</a>";
         echo "<a href='#' class='list-group-item' style='text-align: center'>Karamveer Prasad</a>";

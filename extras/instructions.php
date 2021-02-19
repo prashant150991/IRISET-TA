@@ -18,6 +18,7 @@ class Instructions {
         echo "<div class='row align-content-center'>";
         echo "<div class='col-md-6 offset-md-3 uuu'>";
         echo "<div class='list-group'>";
+        echo "<h1 style='display:none'>Indian Railways Travel Allowance Generator</h1>";
         echo "<ul>";
         echo "<li class='list-group-item list-group-item-primary'><a href='../' style='text-align: center'><h3>Instructions</h3></a></li>";
         echo "<li class='list-group-item'>Works best on PC/Laptop and Google Chrome. But no worries ;) works with other devices and browsers as well.</li>";
