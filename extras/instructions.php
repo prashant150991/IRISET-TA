@@ -43,6 +43,7 @@ class Instructions {
         echo "<title>Travel Allowance Generator</title>";
         echo "<meta charset='utf-8'>";
         echo "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>";
+        echo "<meta name='description' content='Automatic Travel Allowance calculator and printer for Indian Railways.'>";
         echo "<link href='../files/css/index.css' rel='stylesheet' type='text/css'>";
         echo "<script src='../files/js/jquery-3.4.1.min.js'></script>";
         echo "<script src='../files/js/bootstrap.min.js'></script>";
