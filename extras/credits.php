@@ -17,6 +17,9 @@ class Credits {
         echo "<div class='col-md-6 offset-md-3 uuu'>";
         echo "<div class='list-group'>";
         echo "<h1 style='display:none'>Indian Railways Travel Allowance Generator</h1>";
+        echo "<b style='display:none'>";
+        echo "Indian Railways Travel Allowance Generator";
+        echo "</b>";
         echo "<a href='../'  class='list-group-item list-group-item-primary' style='text-align: center'><h3>Credits</h3></a>";
         echo "<a target='_blank' href='https://github.com/itsmepsk' class='list-group-item list-group-item' style='text-align: center'>Prathamesh Kakade (ADSTE Pakala)</a>";
         echo "<a href='#' class='list-group-item' style='text-align: center'>Karamveer Prasad</a>";
@@ -31,7 +34,7 @@ class Credits {
         echo "<!DOCTYPE html>";
         echo "<html lang='en'>";
         echo "<head>";
-        echo "<title>Travel Allowance Generator</title>";
+        echo "<title>Indian Railways Travel Allowance Generator</title>";
         echo "<meta charset='utf-8'>";
         echo "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>";
         echo "<meta name='description' content='Automatic Travel Allowance calculator and printer for Indian Railways.'>";

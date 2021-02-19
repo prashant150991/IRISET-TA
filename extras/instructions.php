@@ -19,6 +19,9 @@ class Instructions {
         echo "<div class='col-md-6 offset-md-3 uuu'>";
         echo "<div class='list-group'>";
         echo "<h1 style='display:none'>Indian Railways Travel Allowance Generator</h1>";
+        echo "<b style='display:none'>";
+        echo "Indian Railways Travel Allowance Generator";
+        echo "</b>";
         echo "<ul>";
         echo "<li class='list-group-item list-group-item-primary'><a href='../' style='text-align: center'><h3>Instructions</h3></a></li>";
         echo "<li class='list-group-item'>Works best on PC/Laptop and Google Chrome. But no worries ;) works with other devices and browsers as well.</li>";
@@ -41,7 +44,7 @@ class Instructions {
         echo "<!DOCTYPE html>";
         echo "<html lang='en'>";
         echo "<head>";
-        echo "<title>Travel Allowance Generator</title>";
+        echo "<title>Indian Railways Travel Allowance Generator</title>";
         echo "<meta charset='utf-8'>";
         echo "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>";
         echo "<meta name='description' content='Automatic Travel Allowance calculator and printer for Indian Railways.'>";
